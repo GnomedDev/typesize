@@ -3,8 +3,6 @@ name = "typesize"
 version = "0.1.0"
 edition = "2021"
 
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
-
 [dependencies]
 hashbrown = { version = "0.14.2", optional = true, default-features = false }
 halfbrown = { version = "0.2.4", default-features = false, optional = true }
@@ -29,3 +27,6 @@ secrecy = ["dep:secrecy"]
 chrono = ["dep:chrono"]
 time = ["dep:time"]
 url = ["dep:url"]
+
+[package.metadata.docs.rs]
+all-features = true

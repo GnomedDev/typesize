@@ -2,18 +2,36 @@
 //!
 //! A library to fetch an accurate estimate of the total memory usage of a value.
 //!
+//! The goal of this library is to produce the most accurate estimate possible, however without being deeply
+//! integrated into the entire ecosystem this cannot be possible. This leads to the real goal being to get
+//! "close enough" for getting a sense of memory usage in your program. If one of the [`TypeSize`]
+//! implementations built-in could be improved, a PR would be greatly appreciated.
+//!
+//! An example usage of this library would be to wrap all the types you want to measure recursively in
+//! the [`derive::TypeSize`] derive macro, and for any types which perform their own heap allocation
+//! to manually implement [`TypeSize`] while overriding the [`TypeSize::extra_size`] method.
+//!
 //! ## Features
 //! ### Library Support
-//! - `arrayvec`: Implements TypeSize for ArrayVec of any size.
-//! - `simd_json`: Implements TypeSize for OwnedValue and StaticNode, enables halfbrown.
-//! - `halfbrown`: Implements TypeSize for SizedHashMap, enables hashbrown.
-//! - `dashmap`: Implements TypeSize for DashMap where K and V are TypeSize.
-//! - `serde_json`: Implements TypeSize for Value and Map.
-//! - `hashbrown`: Implements TypeSize for HashMap.
-//! - `secrecy`: Implements TypeSize for SecretString.
-//! - `chrono`: Implements TypeSize for DateTime of any TimeZone.
-//! - `time`: Implements TypeSize for OffsetDateTime.
-//! - `url`: Implements TypeSize for Url.
+//! - `arrayvec`: Implements [`TypeSize`] for [`ArrayVec`] of any size.
+//! - `simd_json`: Implements [`TypeSize`] for [`OwnedValue`] and [`StaticNode`], enables halfbrown.
+//! - `halfbrown`: Implements [`TypeSize`] for [`SizedHashMap`], enables hashbrown.
+//! - `dashmap`: Implements [`TypeSize`] for [`DashMap`].
+//! - `serde_json`: Implements [`TypeSize`] for [`serde_json::Value`] and [`serde_json::Map`].
+//! - `hashbrown`: Implements [`TypeSize`] for [`hashbrown::HashMap`].
+//! - `secrecy`: Implements [`TypeSize`] for [`Secret`].
+//! - `chrono`: Implements [`TypeSize`] for [`chrono::DateTime`] of any [`chrono::TimeZone`].
+//! - `time`: Implements [`TypeSize`] for [`time::OffsetDateTime`].
+//! - `url`: Implements [`TypeSize`] for [`url::Url`].
+//!
+//! [`ArrayVec`]: arrayvec::ArrayVec
+//! [`OwnedValue`]: simd_json::OwnedValue
+//! [`StaticNode`]: simd_json::StaticNode
+//! [`SizedHashMap`]: halfbrown::SizedHashMap
+//! [`DashMap`]: dashmap::DashMap
+//! [`Secret`]: secrecy::Secret
+#![warn(clippy::pedantic)]
+#![forbid(unsafe_code)]
 
 mod enums;
 mod libs;
@@ -40,8 +58,8 @@ pub trait TypeSize: Sized {
         0
     }
 
-    /// The total number of bytes that this type is using,
-    /// both direct (size_of) and indirect (behind allocations)
+    /// The total number of bytes that this type is using, both direct
+    /// ([`std::mem::size_of`]) and indirect (behind allocations)
     ///
     /// There's no reason to ever override this method.
     fn get_size(&self) -> usize {
@@ -49,6 +67,7 @@ pub trait TypeSize: Sized {
     }
 }
 
+/// Implements [`TypeSize`] for multiple types based on the return value of [`std::mem::size_of`].
 #[macro_export]
 macro_rules! sizeof_impl {
     ($($ty:ty),*) => {

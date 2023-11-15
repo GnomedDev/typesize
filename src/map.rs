@@ -16,7 +16,7 @@ pub(crate) fn generic_map_extra_size<'a, K: TypeSize + 'a, V: TypeSize + 'a>(
     element_size + free_size
 }
 
-impl<K: TypeSize, V: TypeSize> TypeSize for HashMap<K, V> {
+impl<K: TypeSize, V: TypeSize, S> TypeSize for HashMap<K, V, S> {
     fn extra_size(&self) -> usize {
         generic_map_extra_size(self.iter(), self.capacity(), self.len())
     }
