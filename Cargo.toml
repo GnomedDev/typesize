@@ -17,7 +17,7 @@ time = { version = "0.3.30", default-features = false, optional = true }
 url = { version = "2.4", default-features = false, optional = true }
 secrecy = { version = "0.8.0", optional = true }
 serde_json = { version = "1", optional = true }
-typesize-derive = { path = "typesize-derive" }
+typesize-derive = { version = "0.1.0" }
 
 [features]
 arrayvec = ["dep:arrayvec", "halfbrown?/arraybackend"]

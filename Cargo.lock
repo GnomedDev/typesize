@@ -482,6 +482,8 @@ dependencies = [
 [[package]]
 name = "typesize-derive"
 version = "0.1.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "952e2645c35faf5f361c03b235a068caace146d889dc3fc464efde95cc5f2260"
 dependencies = [
  "either",
  "proc-macro2",
