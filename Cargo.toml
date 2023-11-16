@@ -1,7 +1,10 @@
 [package]
 name = "typesize"
+description = "A library to fetch an accurate estimate of the total memory usage of a value."
+repository = "https://github.com/GnomedDev/typesize"
 version = "0.1.0"
 edition = "2021"
+license = "MIT"
 
 [dependencies]
 hashbrown = { version = "0.14.2", optional = true, default-features = false }

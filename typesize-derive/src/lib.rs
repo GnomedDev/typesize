@@ -143,7 +143,5 @@ pub fn typesize_derive(tokens: proc_macro::TokenStream) -> proc_macro::TokenStre
         }
     };
 
-    procout::procout(&output, None, Some("."));
-
     output.into()
 }
