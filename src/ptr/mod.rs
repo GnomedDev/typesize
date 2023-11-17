@@ -10,15 +10,31 @@ pub use rc::SizableRc;
 mod arc;
 mod rc;
 
-/// A wrapper around &T to implement [`TypeSize`].
-///
-/// This has to be explicitly added to prevent automatic deref causing
-/// a field which does not implement Typesize to instead return the size
-/// of a reference.
-#[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
-pub struct Ref<'a, T: ?Sized>(pub &'a T);
+macro_rules! create_ref {
+    (
+        $(#[$meta:meta]),*
+        pub struct $name:ident<$( $lt:lifetime, )? T: ?Sized>(pub $inner:ty)
+    ) => {
+        $(#[$meta]),*
+        #[doc = concat!("A wrapper around `", stringify!($inner), "` to implement [`TypeSize`].")]
+        ///
+        /// This does not consider the size of the inner `T`, simply the size of the pointer.
+        pub struct $name<$($lt, )? T: ?Sized>(pub $inner);
 
-impl<'a, T: ?Sized> TypeSize for Ref<'a, T> {}
+        impl<$($lt, )? T: ?Sized> TypeSize for $name<$($lt, )? T> {}
+    };
+}
+
+create_ref!(
+    #[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
+    pub struct Ref<'a, T: ?Sized>(pub &'a T)
+);
+
+create_ref!(
+    #[derive(PartialEq, Eq, PartialOrd, Ord, Hash)]
+    pub struct RefMut<'a, T: ?Sized>(pub &'a mut T)
+);
+
 impl<'a, T: ?Sized> Deref for Ref<'a, T> {
     type Target = T;
 
@@ -27,15 +43,6 @@ impl<'a, T: ?Sized> Deref for Ref<'a, T> {
     }
 }
 
-/// A wrapper around &mut T to implement [`TypeSize`].
-///
-/// This has to be explicitly added to prevent automatic deref causing
-/// a field which does not implement Typesize to instead return the size
-/// of a reference.
-#[derive(PartialEq, Eq, PartialOrd, Ord, Hash)]
-pub struct RefMut<'a, T: ?Sized>(pub &'a mut T);
-
-impl<'a, T: ?Sized> TypeSize for RefMut<'a, T> {}
 impl<'a, T: ?Sized> Deref for RefMut<'a, T> {
     type Target = T;
 
@@ -49,6 +56,9 @@ impl<'a, T: ?Sized> DerefMut for RefMut<'a, T> {
         self.0
     }
 }
+
+create_ref!(pub struct Ptr<T: ?Sized>(pub *const T));
+create_ref!(pub struct PtrMut<T: ?Sized>(pub *mut T));
 
 mod sealed {
     pub trait ShouldCountInner {}
