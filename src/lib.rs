@@ -37,9 +37,10 @@ mod enums;
 mod libs;
 mod map;
 mod primitives;
-mod ptr;
+pub mod ptr;
 mod vec;
 
+#[deprecated = "Use ptr::{Ref, RefMut}"]
 pub use ptr::{Ref, RefMut};
 
 pub mod derive {
