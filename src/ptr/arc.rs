@@ -52,4 +52,9 @@ impl<T: TypeSize> TypeSize for SizableArc<T, Owned> {
     fn extra_size(&self) -> usize {
         T::get_size(&self.0) + (std::mem::size_of::<AtomicUsize>() * 2)
     }
+
+    #[cfg(feature = "details")]
+    fn get_collection_item_count(&self) -> Option<usize> {
+        T::get_collection_item_count(&self.0)
+    }
 }

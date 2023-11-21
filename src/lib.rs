@@ -59,6 +59,7 @@ pub mod derive {
 /// as this is entirely safe to implement incorrectly.
 pub trait TypeSize: Sized {
     /// The number of bytes more than the [`std::mem::size_of`] that this value is using.
+    #[must_use]
     fn extra_size(&self) -> usize {
         0
     }
@@ -67,9 +68,38 @@ pub trait TypeSize: Sized {
     /// ([`std::mem::size_of`]) and indirect (behind allocations)
     ///
     /// There's no reason to ever override this method.
+    #[must_use]
     fn get_size(&self) -> usize {
         std::mem::size_of::<Self>() + self.extra_size()
     }
+
+    /// Returns information about the number of items this type is holding, if it is a collection.
+    #[must_use]
+    #[cfg(feature = "details")]
+    fn get_collection_item_count(&self) -> Option<usize> {
+        None
+    }
+
+    /// Returns detailed information about the current value's field sizes.
+    ///
+    /// This should generally be implemented by [`derive::TypeSize`]
+    #[must_use]
+    #[cfg(feature = "details")]
+    fn get_size_details(&self) -> Vec<Field> {
+        Vec::new()
+    }
+}
+
+/// A description of a struct or enum field.
+#[derive(Clone, Copy, Debug, PartialEq, Eq, PartialOrd, Ord)]
+#[cfg(feature = "details")]
+pub struct Field {
+    /// The name of the field being described.
+    pub name: &'static str,
+    /// The total size of the field.
+    pub size: usize,
+    /// How many items this collection is holding, if it is one.
+    pub collection_items: Option<usize>,
 }
 
 /// Implements [`TypeSize`] for multiple types based on the return value of [`std::mem::size_of`].

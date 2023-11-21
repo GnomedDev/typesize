@@ -49,4 +49,9 @@ impl<T: TypeSize> TypeSize for SizableRc<T, Owned> {
     fn extra_size(&self) -> usize {
         T::get_size(&self.0) + (std::mem::size_of::<Cell<usize>>() * 2)
     }
+
+    #[cfg(feature = "details")]
+    fn get_collection_item_count(&self) -> Option<usize> {
+        T::get_collection_item_count(&self.0)
+    }
 }

@@ -14,16 +14,31 @@ impl<T: TypeSize> TypeSize for Vec<T> {
     fn extra_size(&self) -> usize {
         generic_vec_extra_size::<T>(self.iter(), self.capacity(), self.len())
     }
+
+    #[cfg(feature = "details")]
+    fn get_collection_item_count(&self) -> Option<usize> {
+        Some(self.len())
+    }
 }
 
 impl<T: TypeSize> TypeSize for VecDeque<T> {
     fn extra_size(&self) -> usize {
         generic_vec_extra_size::<T>(self.iter(), self.capacity(), self.len())
     }
+
+    #[cfg(feature = "details")]
+    fn get_collection_item_count(&self) -> Option<usize> {
+        Some(self.len())
+    }
 }
 
 impl TypeSize for String {
     fn extra_size(&self) -> usize {
         std::mem::size_of::<u8>() * self.capacity()
+    }
+
+    #[cfg(feature = "details")]
+    fn get_collection_item_count(&self) -> Option<usize> {
+        Some(self.len())
     }
 }
