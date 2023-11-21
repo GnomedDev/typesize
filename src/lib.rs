@@ -13,11 +13,12 @@
 //!
 //! ## Features
 //! ### Library Support
+//! - `dashmap`: Implements [`TypeSize`] for [`DashMap`].
 //! - `arrayvec`: Implements [`TypeSize`] for [`ArrayVec`] of any size.
 //! - `simd_json`: Implements [`TypeSize`] for [`OwnedValue`] and [`StaticNode`], enables halfbrown.
 //! - `halfbrown`: Implements [`TypeSize`] for [`SizedHashMap`], enables hashbrown.
-//! - `dashmap`: Implements [`TypeSize`] for [`DashMap`].
 //! - `serde_json`: Implements [`TypeSize`] for [`serde_json::Value`] and [`serde_json::Map`].
+//! - `mini_moka`: Implements [`TypeSize`] for [`mini_moka::unsync::Cache`], and [`mini_moka::sync::Cache`] if `dashmap` is enabled.
 //! - `hashbrown`: Implements [`TypeSize`] for [`hashbrown::HashMap`].
 //! - `secrecy`: Implements [`TypeSize`] for [`Secret`].
 //! - `chrono`: Implements [`TypeSize`] for [`chrono::DateTime`] of any [`chrono::TimeZone`].
@@ -30,7 +31,7 @@
 //! [`SizedHashMap`]: halfbrown::SizedHashMap
 //! [`DashMap`]: dashmap::DashMap
 //! [`Secret`]: secrecy::Secret
-#![warn(clippy::pedantic)]
+#![warn(clippy::pedantic, rust_2018_idioms)]
 #![forbid(unsafe_code)]
 
 mod enums;

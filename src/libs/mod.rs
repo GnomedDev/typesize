@@ -8,6 +8,8 @@ mod dashmap;
 mod halfbrown;
 #[cfg(feature = "hashbrown")]
 mod hashbrown;
+#[cfg(feature = "mini_moka")]
+mod mini_moka;
 #[cfg(feature = "parking_lot")]
 mod parking_lot;
 #[cfg(feature = "secrecy")]

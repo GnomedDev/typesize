@@ -8,7 +8,8 @@ license = "MIT"
 
 [dependencies]
 parking_lot = { version = "0.12.1", default-features = false, optional = true }
-hashbrown = { version = "0.14.2", optional = true, default-features = false }
+hashbrown = { version = "0.14.2", default-features = false, optional = true }
+mini-moka = { version = "0.10.2", default-features = false, optional = true }
 halfbrown = { version = "0.2.4", default-features = false, optional = true }
 simd-json = { version = "0.13", default-features = false, optional = true }
 arrayvec = { version = "0.7.4", default-features = false, optional = true }
@@ -21,12 +22,13 @@ serde_json = { version = "1", optional = true }
 typesize-derive = { version = "0.1.0" }
 
 [features]
+dashmap = ["dep:dashmap", "mini-moka?/sync", "hashbrown"]
 arrayvec = ["dep:arrayvec", "halfbrown?/arraybackend"]
 simd_json = ["dep:simd-json", "halfbrown"]
 halfbrown = ["dep:halfbrown", "hashbrown"]
-dashmap = ["dep:dashmap", "hashbrown"]
 parking_lot = ["dep:parking_lot"]
 serde_json = ["dep:serde_json"]
+mini_moka = ["dep:mini-moka"]
 hashbrown = ["dep:hashbrown"]
 secrecy = ["dep:secrecy"]
 chrono = ["dep:chrono"]
