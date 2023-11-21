@@ -7,10 +7,12 @@ edition = "2021"
 license = "MIT"
 
 [dependencies]
-either = "1.9.0"
 proc-macro2 = "1.0.69"
 quote = "1.0.33"
 syn = "2.0.39"
+
+[features]
+details = []
 
 [lib]
 proc-macro = true

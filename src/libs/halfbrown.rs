@@ -18,4 +18,9 @@ impl<K: TypeSize, V: TypeSize, S, const GROW_LIMIT: usize> TypeSize
             self.len().saturating_sub(GROW_LIMIT),
         )
     }
+
+    #[cfg(feature = "details")]
+    fn get_collection_item_count(&self) -> Option<usize> {
+        Some(self.len())
+    }
 }
