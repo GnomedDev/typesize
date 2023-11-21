@@ -2,7 +2,7 @@
 name = "typesize-derive"
 description = "Internal proc-macro crate for typesize"
 repository = "https://github.com/GnomedDev/typesize"
-version = "0.1.0"
+version = "0.1.2"
 edition = "2021"
 license = "MIT"
 
