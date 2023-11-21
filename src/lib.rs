@@ -39,6 +39,7 @@ mod map;
 mod primitives;
 pub mod ptr;
 mod set;
+mod tuple;
 mod vec;
 
 #[deprecated = "Use ptr::{Ref, RefMut}"]
