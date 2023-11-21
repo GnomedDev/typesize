@@ -8,6 +8,8 @@ mod dashmap;
 mod halfbrown;
 #[cfg(feature = "hashbrown")]
 mod hashbrown;
+#[cfg(feature = "parking_lot")]
+mod parking_lot;
 #[cfg(feature = "secrecy")]
 mod secrecy;
 #[cfg(feature = "serde_json")]

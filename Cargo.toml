@@ -7,6 +7,7 @@ edition = "2021"
 license = "MIT"
 
 [dependencies]
+parking_lot = { version = "0.12.1", default-features = false, optional = true }
 hashbrown = { version = "0.14.2", optional = true, default-features = false }
 halfbrown = { version = "0.2.4", default-features = false, optional = true }
 simd-json = { version = "0.13", default-features = false, optional = true }
@@ -24,6 +25,7 @@ arrayvec = ["dep:arrayvec", "halfbrown?/arraybackend"]
 simd_json = ["dep:simd-json", "halfbrown"]
 halfbrown = ["dep:halfbrown", "hashbrown"]
 dashmap = ["dep:dashmap", "hashbrown"]
+parking_lot = ["dep:parking_lot"]
 serde_json = ["dep:serde_json"]
 hashbrown = ["dep:hashbrown"]
 secrecy = ["dep:secrecy"]
