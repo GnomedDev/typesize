@@ -17,6 +17,7 @@
 //! - `arrayvec`: Implements [`TypeSize`] for [`ArrayVec`] of any size.
 //! - `simd_json`: Implements [`TypeSize`] for [`OwnedValue`] and [`StaticNode`], enables halfbrown.
 //! - `halfbrown`: Implements [`TypeSize`] for [`SizedHashMap`], enables hashbrown.
+//! - `parking_lot`: Implements [`TypeSize`] for [`parking_lot::Mutex`] and [`parking_lot::RwLock`].
 //! - `serde_json`: Implements [`TypeSize`] for [`serde_json::Value`] and [`serde_json::Map`].
 //! - `mini_moka`: Implements [`TypeSize`] for [`mini_moka::unsync::Cache`], and [`mini_moka::sync::Cache`] if `dashmap` is enabled.
 //! - `hashbrown`: Implements [`TypeSize`] for [`hashbrown::HashMap`].
