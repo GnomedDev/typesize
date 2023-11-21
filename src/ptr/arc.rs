@@ -41,6 +41,12 @@ impl<T, SC: ShouldCountInner> std::ops::Deref for SizableArc<T, SC> {
     }
 }
 
+impl<T: std::fmt::Debug, SC: ShouldCountInner> std::fmt::Debug for SizableArc<T, SC> {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        self.0.fmt(f)
+    }
+}
+
 impl<T> TypeSize for SizableArc<T, Borrowed> {}
 impl<T: TypeSize> TypeSize for SizableArc<T, Owned> {
     fn extra_size(&self) -> usize {

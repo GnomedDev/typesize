@@ -38,6 +38,12 @@ impl<T, SC: ShouldCountInner> std::ops::Deref for SizableRc<T, SC> {
     }
 }
 
+impl<T: std::fmt::Debug, SC: ShouldCountInner> std::fmt::Debug for SizableRc<T, SC> {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        self.0.fmt(f)
+    }
+}
+
 impl<T> TypeSize for SizableRc<T, Borrowed> {}
 impl<T: TypeSize> TypeSize for SizableRc<T, Owned> {
     fn extra_size(&self) -> usize {
