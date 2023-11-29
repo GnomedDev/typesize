@@ -1,5 +1,13 @@
 # `typesize` ChangeLog
 
+## 0.1.3
+
+### Added
+
+#### Support for repr(packed) structs
+
+`typesize::derive::TypeSize` now supports `struct`s annotated with `repr(packed)`.
+
 ## 0.1.2
 
 ### Added
