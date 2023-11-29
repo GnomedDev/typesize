@@ -40,10 +40,19 @@ fn struct_padding() {
     #[derive(Default, TypeSize)]
     struct PaddingTest(u8, u64);
 
+    #[repr(packed)]
+    #[derive(Default, TypeSize)]
+    struct PackedTest(u8, u64);
+
     assert_eq!(
         PaddingTest::default().get_size(),
         std::mem::size_of::<PaddingTest>()
     );
+
+    assert_eq!(
+        PackedTest::default().get_size(),
+        0_u64.get_size() + 0_u8.get_size()
+    )
 }
 
 #[test]

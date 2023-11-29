@@ -6,6 +6,28 @@ mod extra_size;
 #[cfg(feature = "details")]
 mod field_details;
 
+#[derive(Clone, Copy)]
+pub(crate) enum IdentMode {
+    NoRef,
+    InsertRef,
+    Packed,
+}
+
+impl IdentMode {
+    pub(crate) fn transform(self, func_name: &impl ToTokens, ident: &impl ToTokens) -> TokenStream {
+        match self {
+            IdentMode::InsertRef => quote!(#func_name(&#ident)),
+            IdentMode::NoRef => quote!(#func_name(#ident)),
+            IdentMode::Packed => {
+                quote!(({
+                    let __typesize_internal_temp = #ident;
+                    #func_name(&__typesize_internal_temp)
+                }))
+            }
+        }
+    }
+}
+
 struct GenerationRet {
     extra_size: TokenStream,
     #[cfg(feature = "details")]
@@ -85,20 +107,49 @@ fn for_each_field<'a>(
     }
 }
 
-fn gen_struct(fields: &syn::Fields) -> GenerationRet {
-    let transform_named = |ident| quote!(&self.#ident);
+fn check_repr_packed(attrs: Vec<syn::Attribute>) -> bool {
+    attrs.into_iter().any(|attr| {
+        let syn::Meta::List(meta) = attr.meta else {
+            return false;
+        };
+
+        let Some(ident) = meta.path.get_ident() else {
+            return false;
+        };
+
+        if ident != "repr" {
+            return false;
+        }
+
+        let Ok(ident) = syn::parse::<syn::Ident>(meta.tokens.into()) else {
+            return false;
+        };
+
+        ident == "packed"
+    })
+}
+
+fn gen_struct(fields: &syn::Fields, is_packed: bool) -> GenerationRet {
+    let transform_named = |ident| quote!(self.#ident);
     let transform_unnamed = |index| {
         let ident = syn::Index::from(index);
-        quote!(&self.#ident)
+        quote!(self.#ident)
+    };
+
+    let ident_mode = if is_packed {
+        IdentMode::Packed
+    } else {
+        IdentMode::InsertRef
     };
 
     GenerationRet {
-        extra_size: extra_size::generate(fields, transform_named, transform_unnamed),
+        extra_size: extra_size::generate(fields, transform_named, transform_unnamed, ident_mode),
         #[cfg(feature = "details")]
         details: Some(field_details::generate(
             fields,
             transform_named,
             transform_unnamed,
+            ident_mode,
         )),
     }
 }
@@ -129,7 +180,9 @@ fn gen_match_arm(variant: &Variant, body: impl ToTokens) -> TokenStream {
     quote!(Self::#variant_name #variant_pattern => #body,)
 }
 
-fn gen_enum(variants: impl Iterator<Item = Variant>) -> GenerationRet {
+fn gen_enum(variants: impl Iterator<Item = Variant>, is_packed: bool) -> GenerationRet {
+    assert!(!is_packed, "repr(packed) enums are not supported!");
+
     let arms: TokenStream = variants
         .map(|variant| {
             gen_match_arm(
@@ -138,6 +191,7 @@ fn gen_enum(variants: impl Iterator<Item = Variant>) -> GenerationRet {
                     &variant.fields,
                     |ident| quote!(#ident),
                     |index| gen_unnamed_ident(index).to_token_stream(),
+                    IdentMode::NoRef,
                 ),
             )
         })
@@ -153,17 +207,19 @@ fn gen_enum(variants: impl Iterator<Item = Variant>) -> GenerationRet {
 #[proc_macro_derive(TypeSize)]
 pub fn typesize_derive(tokens: proc_macro::TokenStream) -> proc_macro::TokenStream {
     let DeriveInput {
-        attrs: _,
+        attrs,
         vis: _,
         ident,
         generics,
         data,
     } = parse_macro_input!(tokens as DeriveInput);
 
+    let is_packed = check_repr_packed(attrs);
+
     let (impl_generics, ty_generics, where_clause) = generics.split_for_impl();
     let bodies = match data {
-        syn::Data::Struct(data) => gen_struct(&data.fields),
-        syn::Data::Enum(data) => gen_enum(data.variants.into_iter()),
+        syn::Data::Struct(data) => gen_struct(&data.fields, is_packed),
+        syn::Data::Enum(data) => gen_enum(data.variants.into_iter(), is_packed),
         syn::Data::Union(_) => panic!("Unions are unsupported for typesize derive!"),
     };
 
