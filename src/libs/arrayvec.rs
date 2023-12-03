@@ -1,4 +1,4 @@
-use arrayvec::ArrayVec;
+use arrayvec::{ArrayString, ArrayVec};
 
 use crate::TypeSize;
 
@@ -7,6 +7,13 @@ impl<T: TypeSize, const CAP: usize> TypeSize for ArrayVec<T, CAP> {
         self.iter().map(TypeSize::extra_size).sum()
     }
 
+    #[cfg(feature = "details")]
+    fn get_collection_item_count(&self) -> Option<usize> {
+        Some(self.len())
+    }
+}
+
+impl<const CAP: usize> TypeSize for ArrayString<CAP> {
     #[cfg(feature = "details")]
     fn get_collection_item_count(&self) -> Option<usize> {
         Some(self.len())

@@ -14,7 +14,7 @@
 //! ## Features
 //! ### Library Support
 //! - `dashmap`: Implements [`TypeSize`] for [`DashMap`].
-//! - `arrayvec`: Implements [`TypeSize`] for [`ArrayVec`] of any size.
+//! - `arrayvec`: Implements [`TypeSize`] for [`ArrayVec`] and [`ArrayString`] of any size.
 //! - `simd_json`: Implements [`TypeSize`] for [`OwnedValue`] and [`StaticNode`], enables halfbrown.
 //! - `halfbrown`: Implements [`TypeSize`] for [`SizedHashMap`], enables hashbrown.
 //! - `parking_lot`: Implements [`TypeSize`] for [`parking_lot::Mutex`] and [`parking_lot::RwLock`].
@@ -27,6 +27,7 @@
 //! - `url`: Implements [`TypeSize`] for [`url::Url`].
 //!
 //! [`ArrayVec`]: arrayvec::ArrayVec
+//! [`ArrayString`]: arrayvec::ArrayString
 //! [`OwnedValue`]: simd_json::OwnedValue
 //! [`StaticNode`]: simd_json::StaticNode
 //! [`SizedHashMap`]: halfbrown::SizedHashMap
