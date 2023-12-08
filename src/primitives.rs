@@ -9,11 +9,10 @@ impl<const N: usize, T: TypeSize> TypeSize for [T; N] {
     fn extra_size(&self) -> usize {
         self.iter().map(T::extra_size).sum()
     }
-}
 
-impl<T: ?Sized + TypeSize> TypeSize for Box<T> {
-    fn extra_size(&self) -> usize {
-        <T as TypeSize>::get_size(self)
+    #[cfg(feature = "details")]
+    fn get_collection_item_count(&self) -> Option<usize> {
+        Some(N)
     }
 }
 
