@@ -1,5 +1,14 @@
 # `typesize` ChangeLog
 
+## 0.1.4
+
+### Added
+
+#### New implementations
+
+`typesize::Typesize` is now implemented for ` Box<str>`` and  `Box<[T]>`, and the missing
+`arrayvec::ArrayString` implementation has been added with the`arrayvec` feature.
+
 ## 0.1.3
 
 ### Added
