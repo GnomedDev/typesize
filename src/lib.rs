@@ -23,6 +23,7 @@
 //! - `hashbrown`: Implements [`TypeSize`] for [`hashbrown::HashMap`].
 //! - `secrecy`: Implements [`TypeSize`] for [`Secret`].
 //! - `chrono`: Implements [`TypeSize`] for [`chrono::DateTime`] of any [`chrono::TimeZone`].
+//! - `nonmax`: Implements [`TypeSize`] for all [`nonmax`] types.
 //! - `time`: Implements [`TypeSize`] for [`time::OffsetDateTime`].
 //! - `url`: Implements [`TypeSize`] for [`url::Url`].
 //!

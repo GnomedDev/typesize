@@ -10,6 +10,8 @@ mod halfbrown;
 mod hashbrown;
 #[cfg(feature = "mini_moka")]
 mod mini_moka;
+#[cfg(feature = "nonmax")]
+mod nonmax;
 #[cfg(feature = "parking_lot")]
 mod parking_lot;
 #[cfg(feature = "secrecy")]
