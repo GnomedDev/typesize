@@ -1,12 +1,20 @@
 # `typesize` ChangeLog
 
+## 0.1.5
+
+### Added
+
+#### New library integrations
+
+- `nonzero` have had size_of `typesize::TypeSize` implementations added for all integer types.
+
 ## 0.1.4
 
 ### Added
 
 #### New implementations
 
-`typesize::Typesize` is now implemented for ` Box<str>`` and  `Box<[T]>`, and the missing
+`typesize::TypeSize` is now implemented for ` Box<str>`` and  `Box<[T]>`, and the missing
 `arrayvec::ArrayString` implementation has been added with the`arrayvec` feature.
 
 ## 0.1.3
@@ -33,7 +41,7 @@ Added `TypeSize::{get_size_details, get_collection_item_count}` to allow breakin
 #### New implementations
 
 - `HashSet`s from `std` and `hashbrown` have had basic implementations added.
-- Tuples containing values that implement `Typesize` up to size 4 have had implementations added.
+- Tuples containing values that implement `TypeSize` up to size 4 have had implementations added.
 
 #### Other
 
