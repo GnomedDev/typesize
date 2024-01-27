@@ -1,3 +1,5 @@
+#![cfg(feature = "std")]
+
 use std::collections::HashSet;
 
 use crate::{vec::generic_vec_extra_size, TypeSize};

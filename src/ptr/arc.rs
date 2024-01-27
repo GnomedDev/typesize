@@ -1,9 +1,7 @@
 #![allow(clippy::module_name_repetitions)]
 
-use std::{
-    marker::PhantomData,
-    sync::{atomic::AtomicUsize, Arc},
-};
+use alloc::sync::Arc;
+use core::{marker::PhantomData, sync::atomic::AtomicUsize};
 
 use crate::TypeSize;
 
@@ -23,7 +21,7 @@ use super::{sealed::ShouldCountInner, Borrowed, Owned};
 /// // Just counts the pointer to the internal `ArcBox`.
 /// assert_eq!(arc_borrow.get_size(), 0_usize.get_size());
 /// // Counts the pointer to the `ArcBox`, plus the two AtomicUsize, and the value.
-/// assert_eq!(arc_owner.get_size(), 0_usize.get_size() + (std::mem::size_of::<usize>() * 2) + 0_u8.get_size());
+/// assert_eq!(arc_owner.get_size(), 0_usize.get_size() + (core::mem::size_of::<usize>() * 2) + 0_u8.get_size());
 /// ```
 pub struct SizableArc<T, SC: ShouldCountInner>(pub Arc<T>, PhantomData<SC>);
 
@@ -33,7 +31,7 @@ impl<T, SC: ShouldCountInner> From<Arc<T>> for SizableArc<T, SC> {
     }
 }
 
-impl<T, SC: ShouldCountInner> std::ops::Deref for SizableArc<T, SC> {
+impl<T, SC: ShouldCountInner> core::ops::Deref for SizableArc<T, SC> {
     type Target = Arc<T>;
 
     fn deref(&self) -> &Self::Target {
@@ -41,8 +39,8 @@ impl<T, SC: ShouldCountInner> std::ops::Deref for SizableArc<T, SC> {
     }
 }
 
-impl<T: std::fmt::Debug, SC: ShouldCountInner> std::fmt::Debug for SizableArc<T, SC> {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+impl<T: core::fmt::Debug, SC: ShouldCountInner> core::fmt::Debug for SizableArc<T, SC> {
+    fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
         self.0.fmt(f)
     }
 }
@@ -50,7 +48,7 @@ impl<T: std::fmt::Debug, SC: ShouldCountInner> std::fmt::Debug for SizableArc<T,
 impl<T> TypeSize for SizableArc<T, Borrowed> {}
 impl<T: TypeSize> TypeSize for SizableArc<T, Owned> {
     fn extra_size(&self) -> usize {
-        T::get_size(&self.0) + (std::mem::size_of::<AtomicUsize>() * 2)
+        T::get_size(&self.0) + (core::mem::size_of::<AtomicUsize>() * 2)
     }
 
     #[cfg(feature = "details")]

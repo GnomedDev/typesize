@@ -46,7 +46,7 @@ fn struct_padding() {
 
     assert_eq!(
         PaddingTest::default().get_size(),
-        std::mem::size_of::<PaddingTest>()
+        core::mem::size_of::<PaddingTest>()
     );
 
     assert_eq!(

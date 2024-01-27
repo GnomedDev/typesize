@@ -1,4 +1,4 @@
-use std::collections::VecDeque;
+use alloc::{collections::VecDeque, string::String, vec::Vec};
 
 use crate::TypeSize;
 
@@ -7,7 +7,7 @@ pub(crate) fn generic_vec_extra_size<'a, T: TypeSize + 'a>(
     capacity: usize,
     len: usize,
 ) -> usize {
-    iter.map(TypeSize::get_size).sum::<usize>() + (capacity - len) * std::mem::size_of::<T>()
+    iter.map(TypeSize::get_size).sum::<usize>() + (capacity - len) * core::mem::size_of::<T>()
 }
 
 impl<T: TypeSize> TypeSize for Vec<T> {
@@ -34,7 +34,7 @@ impl<T: TypeSize> TypeSize for VecDeque<T> {
 
 impl TypeSize for String {
     fn extra_size(&self) -> usize {
-        std::mem::size_of::<u8>() * self.capacity()
+        core::mem::size_of::<u8>() * self.capacity()
     }
 
     #[cfg(feature = "details")]

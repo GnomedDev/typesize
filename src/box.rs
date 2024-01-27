@@ -1,3 +1,5 @@
+use alloc::boxed::Box;
+
 use crate::TypeSize;
 
 impl<T: TypeSize> TypeSize for Box<[T]> {
@@ -13,7 +15,7 @@ impl<T: TypeSize> TypeSize for Box<[T]> {
 
 impl TypeSize for Box<str> {
     fn extra_size(&self) -> usize {
-        std::mem::size_of::<u8>() * self.len()
+        core::mem::size_of::<u8>() * self.len()
     }
 
     #[cfg(feature = "details")]

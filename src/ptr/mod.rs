@@ -1,6 +1,6 @@
 //! Wrappers around pointer/reference types to correctly implement [`TypeSize`].
 
-use std::ops::{Deref, DerefMut};
+use core::ops::{Deref, DerefMut};
 
 use crate::TypeSize;
 

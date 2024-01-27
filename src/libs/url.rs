@@ -1,3 +1,5 @@
+use alloc::string::String;
+
 use crate::TypeSize;
 
 impl TypeSize for url::Url {

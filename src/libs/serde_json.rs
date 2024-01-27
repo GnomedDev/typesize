@@ -1,3 +1,5 @@
+use alloc::string::String;
+
 use crate::{sizeof_impl, TypeSize};
 
 sizeof_impl!(serde_json::Number);

@@ -1,5 +1,4 @@
-use std::collections::HashMap;
-
+#[cfg(any(feature = "std", feature = "mini_moka", feature = "hashbrown"))]
 use crate::TypeSize;
 
 /// Generalisation over (&K, &V) and types like dashmap's `RefMulti`.
@@ -14,6 +13,7 @@ impl<K, V> EntryRef<K, V> for (&K, &V) {
 }
 
 // TODO: Figure out more accurate overheads per Map and replace calls to this with more accurate calculations.
+#[cfg(any(feature = "std", feature = "mini_moka", feature = "hashbrown"))]
 pub(crate) fn generic_map_extra_size<'a, K: TypeSize + 'a, V: TypeSize + 'a>(
     elements: impl Iterator<Item = impl EntryRef<K, V>>,
     capacity: usize,
@@ -27,12 +27,13 @@ pub(crate) fn generic_map_extra_size<'a, K: TypeSize + 'a, V: TypeSize + 'a>(
         .sum();
 
     let free_space = capacity - length;
-    let free_size = free_space * (std::mem::size_of::<K>() + std::mem::size_of::<V>());
+    let free_size = free_space * (core::mem::size_of::<K>() + core::mem::size_of::<V>());
 
     element_size + free_size
 }
 
-impl<K: TypeSize, V: TypeSize, S> TypeSize for HashMap<K, V, S> {
+#[cfg(feature = "std")]
+impl<K: TypeSize, V: TypeSize, S> TypeSize for std::collections::HashMap<K, V, S> {
     fn extra_size(&self) -> usize {
         generic_map_extra_size::<K, V>(self.iter(), self.capacity(), self.len())
     }

@@ -1,6 +1,6 @@
 #![allow(clippy::cast_possible_truncation)]
 
-use std::hash::{BuildHasher, Hash};
+use core::hash::{BuildHasher, Hash};
 
 use crate::{map::generic_map_extra_size, TypeSize};
 

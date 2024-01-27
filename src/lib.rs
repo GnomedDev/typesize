@@ -12,6 +12,10 @@
 //! to manually implement [`TypeSize`] while overriding the [`TypeSize::extra_size`] method.
 //!
 //! ## Features
+//!
+//! - `std`: Implements [`TypeSize`] for [`HashMap`] and [`HashSet`], default enabled.
+//! - `details`: Adds [`TypeSize::get_size_details`] and [`TypeSize::get_collection_item_count`] to get field by field breakdowns of struct types.
+//!
 //! ### Library Support
 //! - `dashmap`: Implements [`TypeSize`] for [`DashMap`].
 //! - `arrayvec`: Implements [`TypeSize`] for [`ArrayVec`] and [`ArrayString`] of any size.
@@ -27,6 +31,8 @@
 //! - `time`: Implements [`TypeSize`] for [`time::OffsetDateTime`].
 //! - `url`: Implements [`TypeSize`] for [`url::Url`].
 //!
+//! [`HashMap`]: std::collections::HashMap
+//! [`HashSet`]: std::collections::HashSet
 //! [`ArrayVec`]: arrayvec::ArrayVec
 //! [`ArrayString`]: arrayvec::ArrayString
 //! [`OwnedValue`]: simd_json::OwnedValue
@@ -34,8 +40,11 @@
 //! [`SizedHashMap`]: halfbrown::SizedHashMap
 //! [`DashMap`]: dashmap::DashMap
 //! [`Secret`]: secrecy::Secret
+#![cfg_attr(not(feature = "std"), no_std)]
 #![warn(clippy::pedantic, rust_2018_idioms)]
 #![forbid(unsafe_code)]
+
+extern crate alloc;
 
 mod r#box;
 mod enums;
@@ -61,19 +70,19 @@ pub mod derive {
 /// Note: Implementations cannot be relied on for any form of `unsafe` bound,
 /// as this is entirely safe to implement incorrectly.
 pub trait TypeSize: Sized {
-    /// The number of bytes more than the [`std::mem::size_of`] that this value is using.
+    /// The number of bytes more than the [`core::mem::size_of`] that this value is using.
     #[must_use]
     fn extra_size(&self) -> usize {
         0
     }
 
     /// The total number of bytes that this type is using, both direct
-    /// ([`std::mem::size_of`]) and indirect (behind allocations)
+    /// ([`core::mem::size_of`]) and indirect (behind allocations)
     ///
     /// There's no reason to ever override this method.
     #[must_use]
     fn get_size(&self) -> usize {
-        std::mem::size_of::<Self>() + self.extra_size()
+        core::mem::size_of::<Self>() + self.extra_size()
     }
 
     /// Returns information about the number of items this type is holding, if it is a collection.
@@ -88,8 +97,8 @@ pub trait TypeSize: Sized {
     /// This should generally be implemented by [`derive::TypeSize`]
     #[must_use]
     #[cfg(feature = "details")]
-    fn get_size_details(&self) -> Vec<Field> {
-        Vec::new()
+    fn get_size_details(&self) -> alloc::vec::Vec<Field> {
+        alloc::vec::Vec::new()
     }
 }
 
@@ -105,7 +114,7 @@ pub struct Field {
     pub collection_items: Option<usize>,
 }
 
-/// Implements [`TypeSize`] for multiple types based on the return value of [`std::mem::size_of`].
+/// Implements [`TypeSize`] for multiple types based on the return value of [`core::mem::size_of`].
 #[macro_export]
 macro_rules! sizeof_impl {
     ($($ty:ty),*) => {

@@ -18,11 +18,11 @@ fn enum_derive() {
 
     assert_eq!(
         vec_variant.get_size(),
-        std::mem::size_of::<DerivedEnum>() + (std::mem::size_of::<u8>() * 4)
+        core::mem::size_of::<DerivedEnum>() + (core::mem::size_of::<u8>() * 4)
     );
-    assert_eq!(val_variant.get_size(), std::mem::size_of::<DerivedEnum>());
-    assert_eq!(big_variant.get_size(), std::mem::size_of::<DerivedEnum>());
-    assert_eq!(none_variant.get_size(), std::mem::size_of::<DerivedEnum>());
+    assert_eq!(val_variant.get_size(), core::mem::size_of::<DerivedEnum>());
+    assert_eq!(big_variant.get_size(), core::mem::size_of::<DerivedEnum>());
+    assert_eq!(none_variant.get_size(), core::mem::size_of::<DerivedEnum>());
 }
 
 #[test]
@@ -38,7 +38,7 @@ fn enum_no_data() {
 
     assert_eq!(
         NoData::JustVariants.get_size(),
-        std::mem::size_of::<NoData>()
+        core::mem::size_of::<NoData>()
     )
 }
 
@@ -51,7 +51,7 @@ fn enum_padding() {
 
     assert_eq!(
         PaddingTest::Variant(0, 0).get_size(),
-        std::mem::size_of::<PaddingTest>()
+        core::mem::size_of::<PaddingTest>()
     )
 }
 
@@ -66,6 +66,6 @@ fn enum_generic() {
 
     assert_eq!(
         Result::<u8, u8>::Ok(0).get_size(),
-        std::mem::size_of::<Result<u8, u8>>()
+        core::mem::size_of::<Result<u8, u8>>()
     )
 }
