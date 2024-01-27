@@ -20,8 +20,14 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Install cargo hack
-        uses: taiki-e/install-action@cargo-hack
+      - name: Run Cargo clippy with no details, no libs
+        run: cargo clippy -- --deny warnings
 
-      - name: Run Cargo clippy on all feature combinations
-        run: cargo hack clippy --feature-powerset -- --deny warnings
+      - name: Run Cargo clippy with details, no libs
+        run: cargo clippy --features details -- --deny warnings
+
+      - name: Run Cargo clippy with no details, all libs
+        run: cargo clippy --features dashmap,arrayvec,simd_json,halfbrown,parking_lot,serde_json,mini_moka,hashbrown,secrecy,chrono,nonmax,time,url -- --deny warnings
+
+      - name: Run Cargo clippy with details, all libs
+        run: cargo clippy --all-features -- --deny warnings

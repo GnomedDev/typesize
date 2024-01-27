@@ -25,6 +25,7 @@ typesize-derive = { path = "typesize-derive" }
 [features]
 details = ["typesize-derive/details"]
 
+# Update docs in lib.rs, and tests in .github/workflows/ci.yml!
 dashmap = ["dep:dashmap", "mini-moka?/sync", "hashbrown"]
 arrayvec = ["dep:arrayvec", "halfbrown?/arraybackend"]
 simd_json = ["dep:simd-json", "halfbrown"]
