@@ -4,6 +4,8 @@ mod arrayvec;
 mod chrono;
 #[cfg(feature = "dashmap")]
 mod dashmap;
+#[cfg(feature = "extract_map_01")]
+mod extract_map;
 #[cfg(feature = "halfbrown")]
 mod halfbrown;
 #[cfg(feature = "hashbrown")]

@@ -157,6 +157,14 @@ dependencies = [
 ]
 
 [[package]]
+name = "extract_map"
+version = "0.1.0"
+source = "git+https://github.com/GnomedDev/extract_map#c2de67523b9a6a6516a1b101d8694cf426b33e13"
+dependencies = [
+ "hashbrown 0.14.3",
+]
+
+[[package]]
 name = "fastrand"
 version = "2.0.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -681,6 +689,7 @@ dependencies = [
  "arrayvec",
  "chrono",
  "dashmap",
+ "extract_map",
  "halfbrown",
  "hashbrown 0.14.3",
  "mini-moka",
