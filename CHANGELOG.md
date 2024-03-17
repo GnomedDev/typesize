@@ -1,5 +1,17 @@
 # `typesize` ChangeLog
 
+## 0.1.6
+
+### Added
+
+#### New library integrations
+
+- `TypeSize` is now implemented for `extract_map::ExtractMap`
+
+#### Other
+
+- Basic no-std support has been added, but this is experimental.
+
 ## 0.1.5
 
 ### Added
@@ -14,7 +26,7 @@
 
 #### New implementations
 
-`typesize::TypeSize` is now implemented for ` Box<str>`` and  `Box<[T]>`, and the missing
+`typesize::TypeSize` is now implemented for `Box<str>` and `Box<[T]>`, and the missing
 `arrayvec::ArrayString` implementation has been added with the`arrayvec` feature.
 
 ## 0.1.3
