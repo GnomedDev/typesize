@@ -159,10 +159,8 @@ dependencies = [
 [[package]]
 name = "extract_map"
 version = "0.1.0"
-source = "git+https://github.com/GnomedDev/extract_map#c2de67523b9a6a6516a1b101d8694cf426b33e13"
-dependencies = [
- "hashbrown 0.14.3",
-]
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "3ea6520c7df666b87a5abae46a3eaad1d7617161cc1d69b2f207f36cec5312b9"
 
 [[package]]
 name = "fastrand"
