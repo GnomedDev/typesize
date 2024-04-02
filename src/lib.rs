@@ -11,6 +11,11 @@
 //! the [`derive::TypeSize`] derive macro, and for any types which perform their own heap allocation
 //! to manually implement [`TypeSize`] while overriding the [`TypeSize::extra_size`] method.
 //!
+//! ## MSRV
+//! The Minimum Supported Rust Version is of this crate is 1.65, and it is considered breaking to raise this.
+//!
+//! This is without any library support features, as those libraries may require a higher MSRV.
+//!
 //! ## Features
 //!
 //! - `std`: Implements [`TypeSize`] for [`HashMap`] and [`HashSet`], default enabled.

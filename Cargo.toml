@@ -2,6 +2,7 @@
 name = "typesize"
 description = "A library to fetch an accurate estimate of the total memory usage of a value."
 repository = "https://github.com/GnomedDev/typesize"
+rust-version = "1.65"
 version = "0.1.6"
 edition = "2021"
 license = "MIT"
