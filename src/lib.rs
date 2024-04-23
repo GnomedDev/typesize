@@ -53,6 +53,7 @@
 extern crate alloc;
 
 mod r#box;
+mod cell;
 mod enums;
 mod libs;
 mod map;
