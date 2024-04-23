@@ -128,3 +128,23 @@ macro_rules! sizeof_impl {
         $(impl TypeSize for $ty {})*
     };
 }
+
+/// Passes through the given tokens if the `details` feature of `typesize` is enabled.
+///
+/// This is mainly useful for libaries making their own [`TypeSize`] to be compatible with `details` on or off.
+#[macro_export]
+#[cfg(feature = "details")]
+macro_rules! if_typesize_details {
+    ($($tt:tt)*) => {
+        $($tt)*
+    }
+}
+
+/// Passes through the given tokens if the `details` feature of `typesize` is enabled.
+///
+/// This is mainly useful for libaries making their own [`TypeSize`] to be compatible with `details` on or off.
+#[macro_export]
+#[cfg(not(feature = "details"))]
+macro_rules! if_typesize_details {
+    ($($tt:tt)*) => {};
+}

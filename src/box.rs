@@ -1,6 +1,6 @@
 use alloc::boxed::Box;
 
-use crate::TypeSize;
+use crate::{if_typesize_details, TypeSize};
 
 impl<T: TypeSize> TypeSize for Box<[T]> {
     fn extra_size(&self) -> usize {
@@ -29,8 +29,13 @@ impl<T: ?Sized + TypeSize> TypeSize for Box<T> {
         <T as TypeSize>::get_size(self)
     }
 
-    #[cfg(feature = "details")]
-    fn get_collection_item_count(&self) -> Option<usize> {
-        <T as TypeSize>::get_collection_item_count(self)
+    if_typesize_details! {
+        fn get_collection_item_count(&self) -> Option<usize> {
+            <T as TypeSize>::get_collection_item_count(self)
+        }
+
+        fn get_size_details(&self) -> alloc::vec::Vec<crate::Field> {
+            <T as TypeSize>::get_size_details(self)
+        }
     }
 }

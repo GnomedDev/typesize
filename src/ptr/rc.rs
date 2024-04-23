@@ -3,7 +3,7 @@
 use alloc::rc::Rc;
 use core::{cell::Cell, marker::PhantomData};
 
-use crate::TypeSize;
+use crate::{if_typesize_details, TypeSize};
 
 use super::{sealed::ShouldCountInner, Borrowed, Owned};
 
@@ -51,8 +51,13 @@ impl<T: TypeSize> TypeSize for SizableRc<T, Owned> {
         T::get_size(&self.0) + (core::mem::size_of::<Cell<usize>>() * 2)
     }
 
-    #[cfg(feature = "details")]
-    fn get_collection_item_count(&self) -> Option<usize> {
-        T::get_collection_item_count(&self.0)
+    if_typesize_details! {
+        fn get_collection_item_count(&self) -> Option<usize> {
+            T::get_collection_item_count(&self.0)
+        }
+
+        fn get_size_details(&self) -> alloc::vec::Vec<crate::Field> {
+            T::get_size_details(&self.0)
+        }
     }
 }
