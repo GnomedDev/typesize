@@ -2,10 +2,12 @@
 use crate::TypeSize;
 
 /// Generalisation over (&K, &V) and types like dashmap's `RefMulti`.
+#[cfg(any(feature = "std", feature = "mini_moka", feature = "hashbrown"))]
 pub(crate) trait EntryRef<K, V> {
     fn get_ref(&self) -> (&K, &V);
 }
 
+#[cfg(any(feature = "std", feature = "mini_moka", feature = "hashbrown"))]
 impl<K, V> EntryRef<K, V> for (&K, &V) {
     fn get_ref(&self) -> (&K, &V) {
         *self
