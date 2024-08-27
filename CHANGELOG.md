@@ -1,5 +1,17 @@
 # `typesize` ChangeLog
 
+## 0.1.8
+
+### Added
+
+- `typesize::if_typesize_details!` allows libraries to implement the `details` methods optionally.
+- `TypeSize` is now implemented for `core::sync::atomic::Atomic*`
+- `TypeSize` is now implemented for `Cell`, and `RefCell`
+
+## 0.1.7
+
+- MSRV is now documented, at Rust 1.65, however this may be changed by enabling library support features.
+
 ## 0.1.6
 
 ### Added
