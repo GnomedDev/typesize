@@ -1,13 +1,10 @@
-#[cfg(any(feature = "std", feature = "mini_moka", feature = "hashbrown"))]
 use crate::TypeSize;
 
 /// Generalisation over (&K, &V) and types like dashmap's `RefMulti`.
-#[cfg(any(feature = "std", feature = "mini_moka", feature = "hashbrown"))]
 pub(crate) trait EntryRef<K, V> {
     fn get_ref(&self) -> (&K, &V);
 }
 
-#[cfg(any(feature = "std", feature = "mini_moka", feature = "hashbrown"))]
 impl<K, V> EntryRef<K, V> for (&K, &V) {
     fn get_ref(&self) -> (&K, &V) {
         *self
@@ -15,7 +12,6 @@ impl<K, V> EntryRef<K, V> for (&K, &V) {
 }
 
 // TODO: Figure out more accurate overheads per Map and replace calls to this with more accurate calculations.
-#[cfg(any(feature = "std", feature = "mini_moka", feature = "hashbrown"))]
 pub(crate) fn generic_map_extra_size<'a, K: TypeSize + 'a, V: TypeSize + 'a>(
     elements: impl Iterator<Item = impl EntryRef<K, V>>,
     capacity: usize,

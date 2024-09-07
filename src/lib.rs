@@ -56,6 +56,7 @@ mod r#box;
 mod cell;
 mod enums;
 mod libs;
+#[cfg(any(feature = "std", feature = "mini_moka", feature = "hashbrown"))]
 mod map;
 mod primitives;
 pub mod ptr;
