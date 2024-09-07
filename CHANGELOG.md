@@ -1,5 +1,12 @@
 # `typesize` ChangeLog
 
+## 0.1.9
+
+### Added
+
+- `TypeSize` is now implemented for `std::hash::RandomState`, `std::hash::DefaultHasher`, and `core::hash::BuildHasherDefault`.
+- A note has been added to the documentation pointing towards `dashmap 6` having native typesize implementations.
+
 ## 0.1.8
 
 ### Added

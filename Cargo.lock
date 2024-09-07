@@ -681,7 +681,7 @@ checksum = "e6631e42e10b40c0690bf92f404ebcfe6e1fdb480391d15f17cc8e96eeed5369"
 
 [[package]]
 name = "typesize"
-version = "0.1.8"
+version = "0.1.9"
 dependencies = [
  "arrayvec",
  "chrono",
