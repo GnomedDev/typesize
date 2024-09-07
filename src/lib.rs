@@ -55,6 +55,7 @@ extern crate alloc;
 mod r#box;
 mod cell;
 mod enums;
+mod hash;
 mod libs;
 #[cfg(any(feature = "std", feature = "mini_moka", feature = "hashbrown"))]
 mod map;
