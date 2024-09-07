@@ -24,7 +24,7 @@ impl TypeSize for Box<str> {
     }
 }
 
-impl<T: ?Sized + TypeSize> TypeSize for Box<T> {
+impl<T: TypeSize> TypeSize for Box<T> {
     fn extra_size(&self) -> usize {
         <T as TypeSize>::get_size(self)
     }
