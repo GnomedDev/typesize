@@ -22,7 +22,7 @@
 //! - `details`: Adds [`TypeSize::get_size_details`] and [`TypeSize::get_collection_item_count`] to get field by field breakdowns of struct types.
 //!
 //! ### Library Support
-//! - `dashmap`: Implements [`TypeSize`] for [`DashMap`].
+//! - `dashmap`: Implements [`TypeSize`] for [`DashMap`] (**Only `5.x`, use the `typesize` feature of dashmap for `6.1`+**).
 //! - `arrayvec`: Implements [`TypeSize`] for [`ArrayVec`] and [`ArrayString`] of any size.
 //! - `simd_json`: Implements [`TypeSize`] for [`OwnedValue`] and [`StaticNode`], enables halfbrown.
 //! - `halfbrown`: Implements [`TypeSize`] for [`SizedHashMap`], enables hashbrown.
