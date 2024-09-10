@@ -161,6 +161,23 @@ struct GenerationRet {
     details: Option<TokenStream>,
 }
 
+/// Implements `TypeSize` automatically for a `struct` or `enum`.
+///
+/// Use `#[typesize(skip)]` on a field to assume it does not manage any external memory.
+///
+/// This will avoid requiring `TypeSize` to be implemented for this field, however may lead to undercounted results if the assumption does not hold.
+///
+/// # Struct Mode
+///
+/// `TypeSize::extra_size` will be calculated by adding up the `extra_size` of all fields.
+///
+/// # Enum Mode
+///
+/// `TypeSize::extra_size` will be calculated by adding up the `extra_size` of all of the fields of the active enum variant.
+///
+/// # Union Mode
+///
+/// Unions are unsupported as there is no safe way to calculate the `extra_size`, implement `typesize::TypeSize` manually.
 #[proc_macro_derive(TypeSize, attributes(typesize))]
 pub fn typesize_derive(tokens: proc_macro::TokenStream) -> proc_macro::TokenStream {
     let DeriveInput {
@@ -177,7 +194,14 @@ pub fn typesize_derive(tokens: proc_macro::TokenStream) -> proc_macro::TokenStre
     let bodies = match data {
         syn::Data::Struct(data) => gen_struct(&data.fields, is_packed),
         syn::Data::Enum(data) => gen_enum(data.variants.into_iter(), is_packed),
-        syn::Data::Union(_) => panic!("Unions are unsupported for typesize derive!"),
+        syn::Data::Union(data) => {
+            return syn::Error::new(
+                data.union_token.span,
+                "Unions are unsupported for typesize derive.",
+            )
+            .into_compile_error()
+            .into()
+        }
     };
 
     let extra_size = bodies.extra_size;
