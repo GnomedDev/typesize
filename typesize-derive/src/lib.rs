@@ -58,7 +58,7 @@ fn gen_unnamed_ident(i: usize) -> Ident {
 
 fn gen_named_exprs<'a>(
     named_fields: impl ExactSizeIterator<Item = &'a Field> + 'a,
-    transform_named: impl Fn(&'a Option<Ident>) -> TokenStream + 'a,
+    transform_named: impl Fn(Option<&'a Ident>) -> TokenStream + 'a,
     common_body: impl Fn((TokenStream, TokenStream)) -> TokenStream + 'a,
 ) -> Option<impl ExactSizeIterator<Item = TokenStream> + 'a> {
     if named_fields.len() == 0 {
@@ -68,7 +68,7 @@ fn gen_named_exprs<'a>(
     Some(
         named_fields
             .map(|field| &field.ident)
-            .map(move |ident| (transform_named(ident), quote!(#ident)))
+            .map(move |ident| (transform_named(ident.as_ref()), quote!(#ident)))
             .map(common_body),
     )
 }
@@ -92,7 +92,7 @@ fn gen_unnamed_exprs(
 fn for_each_field<'a>(
     fields: &'a syn::Fields,
     join_with: Punct,
-    transform_named: impl Fn(&'a Option<Ident>) -> TokenStream + 'a,
+    transform_named: impl Fn(Option<&'a Ident>) -> TokenStream + 'a,
     transform_unnamed: impl Fn(usize) -> TokenStream + 'a,
     common_body: impl Fn((TokenStream, TokenStream)) -> TokenStream + 'a,
 ) -> Option<TokenStream> {

@@ -5,7 +5,7 @@ use crate::{for_each_field, gen_call_with_arg, PassMode};
 
 pub(crate) fn generate<'a>(
     fields: &'a syn::Fields,
-    transform_named: impl Fn(&'a Option<Ident>) -> TokenStream + 'a,
+    transform_named: impl Fn(Option<&'a Ident>) -> TokenStream + 'a,
     transform_unnamed: impl Fn(usize) -> TokenStream + 'a,
     arg_pass_mode: PassMode,
 ) -> TokenStream {
