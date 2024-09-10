@@ -4,8 +4,8 @@ use core::{
         NonZeroU16, NonZeroU32, NonZeroU64, NonZeroU8, NonZeroUsize,
     },
     sync::atomic::{
-        AtomicI16, AtomicI32, AtomicI64, AtomicI8, AtomicIsize, AtomicU16, AtomicU32, AtomicU64,
-        AtomicU8, AtomicUsize,
+        AtomicBool, AtomicI16, AtomicI32, AtomicI64, AtomicI8, AtomicIsize, AtomicU16, AtomicU32,
+        AtomicU64, AtomicU8, AtomicUsize,
     },
 };
 
@@ -25,8 +25,8 @@ impl<const N: usize, T: TypeSize> TypeSize for [T; N] {
 #[rustfmt::skip]
 sizeof_impl!(
     (),
-    bool,
     f32, f64,
+    bool, AtomicBool,
     core::time::Duration,
     u8, u16, u32, u64, u128, usize,
     i8, i16, i32, i64, i128, isize,
