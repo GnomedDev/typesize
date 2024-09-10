@@ -35,5 +35,5 @@ fn test_details() {
         },
     ];
 
-    assert_eq!(test.get_size_details(), test_fields)
+    assert_eq!(test.get_size_details(), test_fields);
 }

@@ -12,7 +12,7 @@ fn struct_named_fields() {
         b: u8,
     }
 
-    assert_eq!(NamedFields::default().get_size(), 0_u8.get_size() * 2)
+    assert_eq!(NamedFields::default().get_size(), 0_u8.get_size() * 2);
 }
 
 #[test]
@@ -20,7 +20,7 @@ fn struct_unnamed_field() {
     #[derive(Default, TypeSize)]
     struct UnnamedFields(u8, u8);
 
-    assert_eq!(UnnamedFields::default().get_size(), 0_u8.get_size() * 2)
+    assert_eq!(UnnamedFields::default().get_size(), 0_u8.get_size() * 2);
 }
 
 #[test]
@@ -73,7 +73,7 @@ fn struct_padding() {
     assert_eq!(
         PackedTest::default().get_size(),
         0_u64.get_size() + 0_u8.get_size()
-    )
+    );
 }
 
 #[test]
@@ -81,5 +81,5 @@ fn struct_generic() {
     #[derive(Default, TypeSize)]
     struct GenericTest<T: TypeSize>(T);
 
-    assert_eq!(GenericTest::<u8>::default().get_size(), 0_u8.get_size())
+    assert_eq!(GenericTest::<u8>::default().get_size(), 0_u8.get_size());
 }

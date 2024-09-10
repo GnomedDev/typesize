@@ -220,7 +220,7 @@ pub fn typesize_derive(tokens: proc_macro::TokenStream) -> proc_macro::TokenStre
             fn get_size_details(&self) -> Vec<::typesize::Field> {
                 #details
             }
-        )
+        );
     }
 
     let output = quote! {

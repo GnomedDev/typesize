@@ -39,7 +39,7 @@ fn enum_no_data() {
     assert_eq!(
         NoData::JustVariants.get_size(),
         core::mem::size_of::<NoData>()
-    )
+    );
 }
 
 #[test]
@@ -52,7 +52,7 @@ fn enum_padding() {
     assert_eq!(
         PaddingTest::Variant(0, 0).get_size(),
         core::mem::size_of::<PaddingTest>()
-    )
+    );
 }
 
 #[test]
@@ -67,5 +67,5 @@ fn enum_generic() {
     assert_eq!(
         Result::<u8, u8>::Ok(0).get_size(),
         core::mem::size_of::<Result<u8, u8>>()
-    )
+    );
 }

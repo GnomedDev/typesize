@@ -36,7 +36,7 @@ fn field_details_visit_fields<'a>(
                     &quote!(::typesize::TypeSize::get_collection_item_count),
                     &ident,
                     arg_pass_mode,
-                )
+                );
             };
 
             quote!(

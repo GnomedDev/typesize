@@ -9,6 +9,9 @@ version = "0.1.9"
 edition = "2021"
 license = "MIT"
 
+[workspace]
+members = ["typesize-derive"]
+
 [dependencies]
 parking_lot = { version = "0.12.1", default-features = false, optional = true }
 hashbrown = { version = "0.14.2", default-features = false, optional = true }
@@ -50,3 +53,10 @@ url = ["dep:url"]
 
 [package.metadata.docs.rs]
 all-features = true
+
+[workspace.lints.clippy]
+pedantic = { level = "warn", priority = -1 }
+
+[workspace.lints.rust]
+rust_2018_idioms = { level = "warn", priority = -1 }
+unsafe_code = "forbid"

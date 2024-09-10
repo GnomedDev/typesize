@@ -47,8 +47,6 @@
 //! [`DashMap`]: dashmap::DashMap
 //! [`Secret`]: secrecy::Secret
 #![cfg_attr(not(feature = "std"), no_std)]
-#![warn(clippy::pedantic, rust_2018_idioms)]
-#![forbid(unsafe_code)]
 
 extern crate alloc;
 
