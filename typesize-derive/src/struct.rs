@@ -9,7 +9,7 @@ use crate::{extra_details_visit_fields, GenerationRet, PassMode};
 #[cfg(feature = "details")]
 fn field_details_visit_fields<'a>(
     fields: &'a syn::Fields,
-    transform_named: impl Fn(Option<&'a Ident>) -> TokenStream + 'a,
+    transform_named: impl Fn(&'a Ident) -> TokenStream + 'a,
     transform_unnamed: impl Fn(usize) -> TokenStream + 'a,
     arg_pass_mode: PassMode,
 ) -> TokenStream {
