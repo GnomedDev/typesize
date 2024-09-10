@@ -9,6 +9,9 @@ use r#enum::gen_enum;
 use r#struct::gen_struct;
 
 #[derive(Clone, Copy)]
+struct SkipField(bool);
+
+#[derive(Clone, Copy)]
 pub(crate) enum PassMode {
     AsIs,
     InsertRef,
@@ -49,36 +52,35 @@ fn join_tokens(
 }
 
 fn gen_named_exprs<'a>(
-    named_fields: impl ExactSizeIterator<Item = &'a Field> + 'a,
+    named_fields: syn::punctuated::Iter<'a, Field>,
     transform_named: impl Fn(&'a Ident) -> TokenStream + 'a,
-    common_body: impl Fn((TokenStream, TokenStream)) -> TokenStream + 'a,
+    common_body: impl Fn(TokenStream, TokenStream, SkipField) -> TokenStream + 'a,
 ) -> Option<impl ExactSizeIterator<Item = TokenStream> + 'a> {
     if named_fields.len() == 0 {
         return None;
     }
 
-    Some(
-        named_fields
-            .map(|field| field.ident.as_ref().unwrap())
-            .map(move |ident| (transform_named(ident), quote!(#ident)))
-            .map(common_body),
-    )
+    Some(named_fields.map(move |field| {
+        let ident = field.ident.as_ref().unwrap();
+        let skip_field = check_extrasize_skip(&field.attrs);
+        common_body(transform_named(ident), quote!(#ident), skip_field)
+    }))
 }
 
-fn gen_unnamed_exprs(
-    field_count: usize,
-    transform_unnamed: impl Fn(usize) -> TokenStream,
-    common_body: impl Fn((TokenStream, TokenStream)) -> TokenStream,
-) -> Option<impl ExactSizeIterator<Item = TokenStream>> {
-    if field_count == 0 {
+fn gen_unnamed_exprs<'a>(
+    unnamed_fields: syn::punctuated::Iter<'a, Field>,
+    transform_unnamed: impl Fn(usize) -> TokenStream + 'a,
+    common_body: impl Fn(TokenStream, TokenStream, SkipField) -> TokenStream + 'a,
+) -> Option<impl ExactSizeIterator<Item = TokenStream> + 'a> {
+    if unnamed_fields.len() == 0 {
         return None;
     };
 
-    Some(
-        (0..field_count)
-            .map(move |i| (transform_unnamed(i), i.to_token_stream()))
-            .map(common_body),
-    )
+    let enumerated_iter = unnamed_fields.enumerate();
+    Some(enumerated_iter.map(move |(i, field)| {
+        let skip_field = check_extrasize_skip(&field.attrs);
+        common_body(transform_unnamed(i), quote!(#i), skip_field)
+    }))
 }
 
 fn for_each_field<'a>(
@@ -86,7 +88,7 @@ fn for_each_field<'a>(
     join_with: Punct,
     transform_named: impl Fn(&'a Ident) -> TokenStream + 'a,
     transform_unnamed: impl Fn(usize) -> TokenStream + 'a,
-    common_body: impl Fn((TokenStream, TokenStream)) -> TokenStream + 'a,
+    common_body: impl Fn(TokenStream, TokenStream, SkipField) -> TokenStream + 'a,
 ) -> Option<TokenStream> {
     match fields {
         syn::Fields::Named(fields) => Some(join_tokens(
@@ -94,7 +96,7 @@ fn for_each_field<'a>(
             join_with,
         )),
         syn::Fields::Unnamed(fields) => Some(join_tokens(
-            gen_unnamed_exprs(fields.unnamed.len(), transform_unnamed, common_body)?,
+            gen_unnamed_exprs(fields.unnamed.iter(), transform_unnamed, common_body)?,
             join_with,
         )),
         syn::Fields::Unit => None,
@@ -112,16 +114,20 @@ fn extra_details_visit_fields<'a>(
         Punct::new('+', Spacing::Alone),
         transform_named,
         transform_unnamed,
-        move |(ident, _)| {
-            gen_call_with_arg(&quote!(::typesize::TypeSize::extra_size), &ident, pass_mode)
+        move |ident, _name, skip| {
+            if skip.0 {
+                quote!(0)
+            } else {
+                gen_call_with_arg(&quote!(::typesize::TypeSize::extra_size), &ident, pass_mode)
+            }
         },
     )
     .unwrap_or_else(|| quote!(0_usize))
 }
 
-fn check_repr_packed(attrs: Vec<syn::Attribute>) -> bool {
-    attrs.into_iter().any(|attr| {
-        let syn::Meta::List(meta) = attr.meta else {
+fn check_metalist_attr(attrs: &[syn::Attribute], expected_ident: &str, inner_ident: &str) -> bool {
+    attrs.iter().any(|attr| {
+        let syn::Meta::List(meta) = &attr.meta else {
             return false;
         };
 
@@ -129,16 +135,24 @@ fn check_repr_packed(attrs: Vec<syn::Attribute>) -> bool {
             return false;
         };
 
-        if ident != "repr" {
+        if ident != expected_ident {
             return false;
         }
 
-        let Ok(ident) = syn::parse::<syn::Ident>(meta.tokens.into()) else {
+        let Ok(ident) = syn::parse::<syn::Ident>(meta.tokens.clone().into()) else {
             return false;
         };
 
-        ident == "packed"
+        ident == inner_ident
     })
+}
+
+fn check_repr_packed(attrs: &[syn::Attribute]) -> bool {
+    check_metalist_attr(attrs, "repr", "packed")
+}
+
+fn check_extrasize_skip(attrs: &[syn::Attribute]) -> SkipField {
+    SkipField(check_metalist_attr(attrs, "typesize", "skip"))
 }
 
 struct GenerationRet {
@@ -147,7 +161,7 @@ struct GenerationRet {
     details: Option<TokenStream>,
 }
 
-#[proc_macro_derive(TypeSize)]
+#[proc_macro_derive(TypeSize, attributes(typesize))]
 pub fn typesize_derive(tokens: proc_macro::TokenStream) -> proc_macro::TokenStream {
     let DeriveInput {
         attrs,
@@ -157,7 +171,7 @@ pub fn typesize_derive(tokens: proc_macro::TokenStream) -> proc_macro::TokenStre
         data,
     } = parse_macro_input!(tokens as DeriveInput);
 
-    let is_packed = check_repr_packed(attrs);
+    let is_packed = check_repr_packed(&attrs);
 
     let (impl_generics, ty_generics, where_clause) = generics.split_for_impl();
     let bodies = match data {

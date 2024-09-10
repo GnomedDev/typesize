@@ -1,5 +1,9 @@
 use typesize::{derive::TypeSize, TypeSize};
 
+#[derive(Default)]
+#[allow(dead_code)]
+struct NotTypeSize(Box<u64>);
+
 #[test]
 fn struct_named_fields() {
     #[derive(Default, TypeSize)]
@@ -17,6 +21,23 @@ fn struct_unnamed_field() {
     struct UnnamedFields(u8, u8);
 
     assert_eq!(UnnamedFields::default().get_size(), 0_u8.get_size() * 2)
+}
+
+#[test]
+#[allow(dead_code)]
+fn struct_skip_attr() {
+    #[derive(Default, TypeSize)]
+    struct NamedSkip {
+        #[typesize(skip)]
+        field: NotTypeSize,
+    }
+
+    #[derive(Default, TypeSize)]
+    struct UnnamedSkip(#[typesize(skip)] NotTypeSize);
+
+    // Just the `usize` for the pointer, not the u64 behind the pointer.
+    assert_eq!(NamedSkip::default().get_size(), 0_usize.get_size());
+    assert_eq!(UnnamedSkip::default().get_size(), 0_usize.get_size());
 }
 
 #[test]

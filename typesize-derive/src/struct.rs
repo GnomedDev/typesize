@@ -20,18 +20,24 @@ fn field_details_visit_fields<'a>(
         Punct::new(',', Spacing::Alone),
         transform_named,
         transform_unnamed,
-        move |(ident, name)| {
-            let size_expr = gen_call_with_arg(
-                &quote!(::typesize::TypeSize::get_size),
-                &ident,
-                arg_pass_mode,
-            );
+        move |ident, name, skip_field| {
+            let (size_expr, collection_items_expr);
+            if skip_field.0 {
+                size_expr = quote!(0);
+                collection_items_expr = quote!(None);
+            } else {
+                size_expr = gen_call_with_arg(
+                    &quote!(::typesize::TypeSize::get_size),
+                    &ident,
+                    arg_pass_mode,
+                );
 
-            let collection_items_expr = gen_call_with_arg(
-                &quote!(::typesize::TypeSize::get_collection_item_count),
-                &ident,
-                arg_pass_mode,
-            );
+                collection_items_expr = gen_call_with_arg(
+                    &quote!(::typesize::TypeSize::get_collection_item_count),
+                    &ident,
+                    arg_pass_mode,
+                )
+            };
 
             quote!(
                 ::typesize::Field {
