@@ -62,6 +62,7 @@ pub mod ptr;
 mod set;
 #[cfg(feature = "std")]
 mod sync;
+mod time;
 mod tuple;
 mod vec;
 

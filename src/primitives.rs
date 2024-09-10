@@ -27,7 +27,6 @@ sizeof_impl!(
     (),
     f32, f64,
     bool, AtomicBool,
-    core::time::Duration,
     u8, u16, u32, u64, u128, usize,
     i8, i16, i32, i64, i128, isize,
     AtomicU8, AtomicU16, AtomicU32, AtomicU64, AtomicUsize,
