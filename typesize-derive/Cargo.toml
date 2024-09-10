@@ -3,7 +3,7 @@ name = "typesize-derive"
 description = "Internal proc-macro crate for typesize"
 repository = "https://github.com/GnomedDev/typesize"
 rust-version = "1.65"
-version = "0.1.7"
+version = "0.1.10"
 edition = "2021"
 license = "MIT"
 

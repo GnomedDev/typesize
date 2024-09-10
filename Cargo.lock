@@ -681,7 +681,7 @@ checksum = "e6631e42e10b40c0690bf92f404ebcfe6e1fdb480391d15f17cc8e96eeed5369"
 
 [[package]]
 name = "typesize"
-version = "0.1.9"
+version = "0.1.10"
 dependencies = [
  "arrayvec",
  "chrono",
@@ -702,7 +702,7 @@ dependencies = [
 
 [[package]]
 name = "typesize-derive"
-version = "0.1.7"
+version = "0.1.10"
 dependencies = [
  "proc-macro2",
  "quote",

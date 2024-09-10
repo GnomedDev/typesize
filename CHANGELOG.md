@@ -1,5 +1,14 @@
 # `typesize` ChangeLog
 
+## 0.1.10
+
+### Added
+
+- `typesize::derive::TypeSize` now has proper documentation.
+- The derive now supports `#[typesize(skip)]` to skip the extra_size calculation for a given field.
+- `TypeSize` is now implemented for `AtomicBool`, which was missed in the `0.1.8` updates.
+- `TypeSize` is now implemented for `std::sync::{Mutex, RwLock}`.
+
 ## 0.1.9
 
 ### Added
