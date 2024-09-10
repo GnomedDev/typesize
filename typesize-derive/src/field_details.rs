@@ -1,13 +1,13 @@
 use proc_macro2::{Ident, Punct, Spacing, TokenStream};
 use quote::quote;
 
-use crate::{for_each_field, IdentMode};
+use crate::{for_each_field, gen_call_with_arg, PassMode};
 
 pub(crate) fn generate<'a>(
     fields: &'a syn::Fields,
     transform_named: impl Fn(&'a Option<Ident>) -> TokenStream + 'a,
     transform_unnamed: impl Fn(usize) -> TokenStream + 'a,
-    ident_mode: IdentMode,
+    arg_pass_mode: PassMode,
 ) -> TokenStream {
     let exprs = for_each_field(
         fields,
@@ -15,10 +15,16 @@ pub(crate) fn generate<'a>(
         transform_named,
         transform_unnamed,
         move |(ident, name)| {
-            let size_expr = ident_mode.transform(&quote!(::typesize::TypeSize::get_size), &ident);
-            let collection_items_expr = ident_mode.transform(
+            let size_expr = gen_call_with_arg(
+                &quote!(::typesize::TypeSize::get_size),
+                &ident,
+                arg_pass_mode,
+            );
+
+            let collection_items_expr = gen_call_with_arg(
                 &quote!(::typesize::TypeSize::get_collection_item_count),
                 &ident,
+                arg_pass_mode,
             );
 
             quote!(

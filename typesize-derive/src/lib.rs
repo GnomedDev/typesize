@@ -7,23 +7,25 @@ mod extra_size;
 mod field_details;
 
 #[derive(Clone, Copy)]
-pub(crate) enum IdentMode {
-    NoRef,
+pub(crate) enum PassMode {
+    AsIs,
     InsertRef,
     Packed,
 }
 
-impl IdentMode {
-    pub(crate) fn transform(self, func_name: &impl ToTokens, ident: &impl ToTokens) -> TokenStream {
-        match self {
-            IdentMode::InsertRef => quote!(#func_name(&#ident)),
-            IdentMode::NoRef => quote!(#func_name(#ident)),
-            IdentMode::Packed => {
-                quote!(({
-                    let __typesize_internal_temp = #ident;
-                    #func_name(&__typesize_internal_temp)
-                }))
-            }
+fn gen_call_with_arg(
+    func_name: &TokenStream,
+    arg: &TokenStream,
+    pass_mode: PassMode,
+) -> TokenStream {
+    match pass_mode {
+        PassMode::AsIs => quote!(#func_name(#arg)),
+        PassMode::InsertRef => quote!(#func_name(&#arg)),
+        PassMode::Packed => {
+            quote!(({
+                let __typesize_internal_temp = #arg;
+                #func_name(&__typesize_internal_temp)
+            }))
         }
     }
 }
@@ -136,20 +138,20 @@ fn gen_struct(fields: &syn::Fields, is_packed: bool) -> GenerationRet {
         quote!(self.#ident)
     };
 
-    let ident_mode = if is_packed {
-        IdentMode::Packed
+    let pass_mode = if is_packed {
+        PassMode::Packed
     } else {
-        IdentMode::InsertRef
+        PassMode::InsertRef
     };
 
     GenerationRet {
-        extra_size: extra_size::generate(fields, transform_named, transform_unnamed, ident_mode),
+        extra_size: extra_size::generate(fields, transform_named, transform_unnamed, pass_mode),
         #[cfg(feature = "details")]
         details: Some(field_details::generate(
             fields,
             transform_named,
             transform_unnamed,
-            ident_mode,
+            pass_mode,
         )),
     }
 }
@@ -191,7 +193,7 @@ fn gen_enum(variants: impl Iterator<Item = Variant>, is_packed: bool) -> Generat
                     &variant.fields,
                     |ident| quote!(#ident),
                     |index| gen_unnamed_ident(index).to_token_stream(),
-                    IdentMode::NoRef,
+                    PassMode::AsIs,
                 ),
             )
         })
