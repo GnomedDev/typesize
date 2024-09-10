@@ -60,6 +60,8 @@ mod map;
 mod primitives;
 pub mod ptr;
 mod set;
+#[cfg(feature = "std")]
+mod sync;
 mod tuple;
 mod vec;
 
