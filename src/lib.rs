@@ -37,6 +37,7 @@
 //! - `time`: Implements [`TypeSize`] for [`time::OffsetDateTime`].
 //! - `url`: Implements [`TypeSize`] for [`url::Url`].
 //! - `bitvec`: Implements [`TypeSize`] for [`bitvec::array::BitArray`] and [`bitvec::vec::BitVec`].
+//! - `web-time`: Implements [`TypeSize`] for [`web_time::Instant`] (on platforms where this isn't a type alias to [`std::time::Instant`]).
 //!
 //! [`HashMap`]: std::collections::HashMap
 //! [`HashSet`]: std::collections::HashSet
