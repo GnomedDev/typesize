@@ -28,6 +28,7 @@ secrecy = { version = "0.8.0", optional = true }
 serde_json = { version = "1", optional = true }
 nonmax = { version = "0.5.5", optional = true }
 bitvec = { version = "1.0.1", optional = true }
+web-time = { version = "1.1.0", optional = true }
 typesize-derive = { version = "=0.1.7", path = "typesize-derive" }
 
 [features]
@@ -53,6 +54,7 @@ nonmax = ["dep:nonmax"]
 time = ["dep:time"]
 url = ["dep:url"]
 bitvec = ["dep:bitvec"]
+web-time = ["dep:web-time"]
 
 [package.metadata.docs.rs]
 all-features = true

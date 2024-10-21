@@ -37,6 +37,9 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      - name: Install `wasm32-unknown-unknown` target
+        run: rustup target add wasm32-unknown-unknown
+
       - name: Run Cargo clippy with no details, no libs
         run: cargo clippy -- --deny warnings
 
@@ -47,7 +50,13 @@ jobs:
         run: cargo clippy --features details --no-default-features -- --deny warnings
 
       - name: Run Cargo clippy with no details, all libs
-        run: cargo clippy --features dashmap,arrayvec,simd_json,halfbrown,parking_lot,serde_json,mini_moka,hashbrown,secrecy,chrono,nonmax,time,url,extract_map_01,bitvec -- --deny warnings
+        run: cargo clippy --features dashmap,arrayvec,simd_json,halfbrown,parking_lot,serde_json,mini_moka,hashbrown,secrecy,chrono,nonmax,time,url,extract_map_01,bitvec,web-time -- --deny warnings
 
       - name: Run Cargo clippy with details, all libs
         run: cargo clippy --all-features -- --deny warnings
+
+      - name: Run Cargo clippy with no details, `wasm32-unknown-unknown`-specific libs
+        run: cargo clippy --target wasm32-unknown-unknown --features web-time -- --deny warnings
+
+      - name: Run Cargo clippy with details, `wasm32-unknown-unknown`-specific libs
+        run: cargo clippy --target wasm32-unknown-unknown --features details,web-time -- --deny warnings
