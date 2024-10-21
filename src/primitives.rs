@@ -1,7 +1,7 @@
 use core::{
     num::{
         NonZeroI128, NonZeroI16, NonZeroI32, NonZeroI64, NonZeroI8, NonZeroIsize, NonZeroU128,
-        NonZeroU16, NonZeroU32, NonZeroU64, NonZeroU8, NonZeroUsize, Saturating, Wrapping,
+        NonZeroU16, NonZeroU32, NonZeroU64, NonZeroU8, NonZeroUsize, Wrapping,
     },
     sync::atomic::{
         AtomicBool, AtomicI16, AtomicI32, AtomicI64, AtomicI8, AtomicIsize, AtomicU16, AtomicU32,
@@ -39,6 +39,8 @@ sizeof_impl!(
 
 #[cfg(feature = "saturating_impls")]
 mod saturating {
+    use core::num::Saturating;
+
     use super::*;
 
     #[rustfmt::skip]
