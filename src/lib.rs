@@ -36,6 +36,7 @@
 //! - `nonmax`: Implements [`TypeSize`] for all [`nonmax`] types.
 //! - `time`: Implements [`TypeSize`] for [`time::OffsetDateTime`].
 //! - `url`: Implements [`TypeSize`] for [`url::Url`].
+//! - `bitvec`: Implements [`TypeSize`] for [`bitvec::array::BitArray`] and [`bitvec::vec::BitVec`].
 //!
 //! [`HashMap`]: std::collections::HashMap
 //! [`HashSet`]: std::collections::HashSet

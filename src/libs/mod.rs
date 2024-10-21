@@ -1,5 +1,7 @@
 #[cfg(feature = "arrayvec")]
 mod arrayvec;
+#[cfg(feature = "bitvec")]
+mod bitvec;
 #[cfg(feature = "chrono")]
 mod chrono;
 #[cfg(feature = "dashmap")]
