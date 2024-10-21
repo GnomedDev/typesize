@@ -34,6 +34,7 @@ default = ["std"]
 
 std = []
 details = ["typesize-derive/details"]
+saturating_impls = []
 
 # Update docs in lib.rs, and tests in .github/workflows/ci.yml!
 dashmap = ["dep:dashmap", "mini-moka?/sync", "hashbrown"]

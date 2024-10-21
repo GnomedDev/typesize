@@ -34,7 +34,16 @@ sizeof_impl!(
     NonZeroU8, NonZeroU16, NonZeroU32, NonZeroU64, NonZeroU128, NonZeroUsize,
     NonZeroI8, NonZeroI16, NonZeroI32, NonZeroI64, NonZeroI128, NonZeroIsize,
     Wrapping<u8>, Wrapping<u16>, Wrapping<u32>, Wrapping<u64>, Wrapping<u128>, Wrapping<usize>,
-    Wrapping<i8>, Wrapping<i16>, Wrapping<i32>, Wrapping<i64>, Wrapping<i128>, Wrapping<isize>,
-    Saturating<u8>, Saturating<u16>, Saturating<u32>, Saturating<u64>, Saturating<u128>, Saturating<usize>,
-    Saturating<i8>, Saturating<i16>, Saturating<i32>, Saturating<i64>, Saturating<i128>, Saturating<isize>
+    Wrapping<i8>, Wrapping<i16>, Wrapping<i32>, Wrapping<i64>, Wrapping<i128>, Wrapping<isize>
 );
+
+#[cfg(feature = "saturating_impls")]
+mod saturating {
+    use super::*;
+
+    #[rustfmt::skip]
+    sizeof_impl!(
+        Saturating<u8>, Saturating<u16>, Saturating<u32>, Saturating<u64>, Saturating<u128>, Saturating<usize>,
+        Saturating<i8>, Saturating<i16>, Saturating<i32>, Saturating<i64>, Saturating<i128>, Saturating<isize>
+    );
+}

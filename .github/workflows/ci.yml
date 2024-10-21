@@ -50,4 +50,4 @@ jobs:
         run: cargo clippy --features dashmap,arrayvec,simd_json,halfbrown,parking_lot,serde_json,mini_moka,hashbrown,secrecy,chrono,nonmax,time,url,extract_map_01 -- --deny warnings
 
       - name: Run Cargo clippy with details, all libs
-        run: cargo clippy --all-features -- --deny warnings
+        run: cargo clippy --features details,dashmap,arrayvec,simd_json,halfbrown,parking_lot,serde_json,mini_moka,hashbrown,secrecy,chrono,nonmax,time,url,extract_map_01 -- --deny warnings
