@@ -37,6 +37,9 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      - name: Install `wasm32-unknown-unknown` target
+        run: rustup target add wasm32-unknown-unknown
+
       - name: Run Cargo clippy with no details, no libs
         run: cargo clippy -- --deny warnings
 
