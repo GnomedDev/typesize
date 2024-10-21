@@ -59,4 +59,4 @@ jobs:
         run: cargo clippy --target wasm32-unknown-unknown --features web-time -- --deny warnings
 
       - name: Run Cargo clippy with details, `wasm32-unknown-unknown`-specific libs
-        run: cargo clippy --target details,wasm32-unknown-unknown --features web-time -- --deny warnings
+        run: cargo clippy --target wasm32-unknown-unknown --features details,web-time -- --deny warnings
