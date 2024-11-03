@@ -1,6 +1,6 @@
 use proc_macro2::{Ident, Punct, Spacing, TokenStream};
 use quote::{quote, ToTokens};
-use syn::{parse_macro_input, DeriveInput, Field, Token};
+use syn::{parse_macro_input, DeriveInput, Field};
 
 mod r#enum;
 mod r#struct;
