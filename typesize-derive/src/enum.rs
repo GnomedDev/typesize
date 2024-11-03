@@ -35,26 +35,29 @@ fn gen_match_arm(variant: &Variant, body: impl ToTokens) -> TokenStream {
     quote!(Self::#variant_name #variant_pattern => #body,)
 }
 
-pub(crate) fn gen_enum(variants: impl Iterator<Item = Variant>, is_packed: bool) -> GenerationRet {
+pub(crate) fn gen_enum(
+    variants: impl Iterator<Item = Variant>,
+    is_packed: bool,
+) -> syn::Result<GenerationRet> {
     assert!(!is_packed, "repr(packed) enums are not supported!");
 
     let arms: TokenStream = variants
         .map(|variant| {
-            gen_match_arm(
+            Ok(gen_match_arm(
                 &variant,
                 extra_details_visit_fields(
                     &variant.fields,
                     |ident| quote!(#ident),
                     |index| gen_unnamed_ident(index).to_token_stream(),
                     PassMode::AsIs,
-                ),
-            )
+                )?,
+            ))
         })
-        .collect();
+        .collect::<syn::Result<_>>()?;
 
-    GenerationRet {
+    Ok(GenerationRet {
         extra_size: quote!(match self {#arms}),
         #[cfg(feature = "details")]
         details: None,
-    }
+    })
 }

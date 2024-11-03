@@ -41,6 +41,27 @@ fn struct_skip_attr() {
 }
 
 #[test]
+fn struct_with_attr() {
+    const EXTRA_SIZE: usize = 42;
+
+    fn my_extra_size(field: &usize) -> usize {
+        EXTRA_SIZE
+    }
+
+    #[derive(Default, TypeSize)]
+    struct NamedWith {
+        #[typesize(with = my_extra_size)]
+        field: usize,
+    }
+
+    #[derive(Default, TypeSize)]
+    struct UnnamedWith(#[typesize(with = my_extra_size)] usize);
+
+    assert_eq!(NamedWith::default().get_size(), EXTRA_SIZE);
+    assert_eq!(UnnamedWith::default().get_size(), EXTRA_SIZE);
+}
+
+#[test]
 fn struct_unit() {
     #[derive(TypeSize)]
     struct Unit;

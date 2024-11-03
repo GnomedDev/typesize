@@ -8,8 +8,12 @@ mod r#struct;
 use r#enum::gen_enum;
 use r#struct::gen_struct;
 
-#[derive(Clone, Copy)]
-struct SkipField(bool);
+#[derive(Clone)]
+enum FieldConfig {
+    Default,
+    Skip,
+    With(syn::Path),
+}
 
 #[derive(Clone, Copy)]
 pub(crate) enum PassMode {
@@ -51,35 +55,55 @@ fn join_tokens(
     out_tokens
 }
 
+fn try_join_tokens(
+    exprs: impl ExactSizeIterator<Item = syn::Result<impl ToTokens>>,
+    sep: impl ToTokens,
+) -> syn::Result<TokenStream> {
+    let expr_count = exprs.len();
+    let mut out_tokens = TokenStream::new();
+    for (i, expr) in exprs.enumerate() {
+        expr?.to_tokens(&mut out_tokens);
+        if expr_count != i + 1 {
+            sep.to_tokens(&mut out_tokens);
+        }
+    }
+
+    Ok(out_tokens)
+}
+
 fn gen_named_exprs<'a>(
     named_fields: syn::punctuated::Iter<'a, Field>,
     transform_named: impl Fn(&'a Ident) -> TokenStream + 'a,
-    common_body: impl Fn(TokenStream, TokenStream, SkipField) -> TokenStream + 'a,
-) -> Option<impl ExactSizeIterator<Item = TokenStream> + 'a> {
+    common_body: impl Fn(TokenStream, TokenStream, FieldConfig) -> TokenStream + 'a,
+) -> Option<impl ExactSizeIterator<Item = syn::Result<TokenStream>> + 'a> {
     if named_fields.len() == 0 {
         return None;
     }
 
     Some(named_fields.map(move |field| {
         let ident = field.ident.as_ref().unwrap();
-        let skip_field = check_extrasize_skip(&field.attrs);
-        common_body(transform_named(ident), quote!(#ident), skip_field)
+        let field_config = get_field_config(&field.attrs)?;
+        Ok(common_body(
+            transform_named(ident),
+            quote!(#ident),
+            field_config,
+        ))
     }))
 }
 
 fn gen_unnamed_exprs<'a>(
     unnamed_fields: syn::punctuated::Iter<'a, Field>,
     transform_unnamed: impl Fn(usize) -> TokenStream + 'a,
-    common_body: impl Fn(TokenStream, TokenStream, SkipField) -> TokenStream + 'a,
-) -> Option<impl ExactSizeIterator<Item = TokenStream> + 'a> {
+    common_body: impl Fn(TokenStream, TokenStream, FieldConfig) -> TokenStream + 'a,
+) -> Option<impl ExactSizeIterator<Item = syn::Result<TokenStream>> + 'a> {
     if unnamed_fields.len() == 0 {
         return None;
     };
 
     let enumerated_iter = unnamed_fields.enumerate();
     Some(enumerated_iter.map(move |(i, field)| {
-        let skip_field = check_extrasize_skip(&field.attrs);
-        common_body(transform_unnamed(i), quote!(#i), skip_field)
+        let field_config = get_field_config(&field.attrs)?;
+        Ok(common_body(transform_unnamed(i), quote!(#i), field_config))
     }))
 }
 
@@ -88,14 +112,14 @@ fn for_each_field<'a>(
     join_with: Punct,
     transform_named: impl Fn(&'a Ident) -> TokenStream + 'a,
     transform_unnamed: impl Fn(usize) -> TokenStream + 'a,
-    common_body: impl Fn(TokenStream, TokenStream, SkipField) -> TokenStream + 'a,
-) -> Option<TokenStream> {
+    common_body: impl Fn(TokenStream, TokenStream, FieldConfig) -> TokenStream + 'a,
+) -> Option<syn::Result<TokenStream>> {
     match fields {
-        syn::Fields::Named(fields) => Some(join_tokens(
+        syn::Fields::Named(fields) => Some(try_join_tokens(
             gen_named_exprs(fields.named.iter(), transform_named, common_body)?,
             join_with,
         )),
-        syn::Fields::Unnamed(fields) => Some(join_tokens(
+        syn::Fields::Unnamed(fields) => Some(try_join_tokens(
             gen_unnamed_exprs(fields.unnamed.iter(), transform_unnamed, common_body)?,
             join_with,
         )),
@@ -108,21 +132,21 @@ fn extra_details_visit_fields<'a>(
     transform_named: impl Fn(&'a Ident) -> TokenStream + 'a,
     transform_unnamed: impl Fn(usize) -> TokenStream + 'a,
     pass_mode: PassMode,
-) -> TokenStream {
+) -> syn::Result<TokenStream> {
     for_each_field(
         fields,
         Punct::new('+', Spacing::Alone),
         transform_named,
         transform_unnamed,
-        move |ident, _name, skip| {
-            if skip.0 {
-                quote!(0)
-            } else {
+        move |ident, _name, config| match config {
+            FieldConfig::Skip => quote!(0),
+            FieldConfig::Default => {
                 gen_call_with_arg(&quote!(::typesize::TypeSize::extra_size), &ident, pass_mode)
             }
+            FieldConfig::With(fn_path) => gen_call_with_arg(&fn_path, &ident, pass_mode),
         },
     )
-    .unwrap_or_else(|| quote!(0_usize))
+    .unwrap_or_else(|| Ok(quote!(0_usize)))
 }
 
 fn check_metalist_attr(attrs: &[syn::Attribute], expected_ident: &str, inner_ident: &str) -> bool {
@@ -151,8 +175,54 @@ fn check_repr_packed(attrs: &[syn::Attribute]) -> bool {
     check_metalist_attr(attrs, "repr", "packed")
 }
 
-fn check_extrasize_skip(attrs: &[syn::Attribute]) -> SkipField {
-    SkipField(check_metalist_attr(attrs, "typesize", "skip"))
+fn get_field_config(attrs: &[syn::Attribute]) -> syn::Result<FieldConfig> {
+    enum Input {
+        Skip {
+            skip: Ident,
+        },
+        With {
+            with: Ident,
+            eq: syn::Token![=],
+            path: syn::Path,
+        },
+    }
+
+    impl syn::parse::Parse for Input {
+        fn parse(input: syn::parse::ParseStream<'_>) -> syn::Result<Self> {
+            let ident = input.parse::<Ident>()?;
+
+            todo!()
+            // let lookahead = input.lookahead1();
+            // if lookahead.peek(Token![skip]) {
+            //     Ok(Self::Skip {
+            //         skip: input.parse(),
+            //     })
+            // } else if lookahead.peek(Token![with]) {
+            // }
+        }
+    }
+
+    for attr in attrs {
+        let syn::Meta::List(meta) = &attr.meta else {
+            continue;
+        };
+
+        let Some(path) = meta.path.get_ident() else {
+            continue;
+        };
+
+        if path != "typesize" {
+            continue;
+        }
+
+        let input = syn::parse::<Input>(meta.tokens.clone().into())?;
+        return Ok(match input {
+            Input::Skip { .. } => FieldConfig::Skip,
+            Input::With { path, .. } => FieldConfig::With(path),
+        });
+    }
+
+    Ok(FieldConfig::Default)
 }
 
 struct GenerationRet {
@@ -194,13 +264,16 @@ pub fn typesize_derive(tokens: proc_macro::TokenStream) -> proc_macro::TokenStre
     let bodies = match data {
         syn::Data::Struct(data) => gen_struct(&data.fields, is_packed),
         syn::Data::Enum(data) => gen_enum(data.variants.into_iter(), is_packed),
-        syn::Data::Union(data) => {
-            return syn::Error::new(
-                data.union_token.span,
-                "Unions are unsupported for typesize derive.",
-            )
-            .into_compile_error()
-            .into()
+        syn::Data::Union(data) => Err(syn::Error::new(
+            data.union_token.span,
+            "Unions are unsupported for typesize derive.",
+        )),
+    };
+
+    let bodies = match bodies {
+        Ok(bodies) => bodies,
+        Err(err) => {
+            return err.into_compile_error().into();
         }
     };
 
