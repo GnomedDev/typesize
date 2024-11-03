@@ -69,3 +69,28 @@ fn enum_generic() {
         core::mem::size_of::<Result<u8, u8>>()
     );
 }
+
+#[test]
+fn enum_with_attr() {
+    fn returns_1(_: &usize) -> usize {
+        1
+    }
+
+    fn returns_2(_: &usize) -> usize {
+        2
+    }
+
+    #[derive(TypeSize)]
+    enum Foo {
+        A(usize),
+        B(#[typesize(with = returns_1)] usize),
+        C {
+            #[typesize(with = returns_2)]
+            field: usize,
+        },
+    }
+
+    assert_eq!(Foo::A(0).extra_size(), 0);
+    assert_eq!(Foo::B(0).extra_size(), 1);
+    assert_eq!(Foo::C { field: 0 }.extra_size(), 2);
+}

@@ -1,6 +1,6 @@
 use proc_macro2::{Ident, Punct, Spacing, TokenStream};
 use quote::{quote, ToTokens};
-use syn::{parse_macro_input, DeriveInput, Field};
+use syn::{parse_macro_input, DeriveInput, Field, Token};
 
 mod r#enum;
 mod r#struct;
@@ -143,7 +143,9 @@ fn extra_details_visit_fields<'a>(
             FieldConfig::Default => {
                 gen_call_with_arg(&quote!(::typesize::TypeSize::extra_size), &ident, pass_mode)
             }
-            FieldConfig::With(fn_path) => gen_call_with_arg(&fn_path, &ident, pass_mode),
+            FieldConfig::With(fn_path) => {
+                gen_call_with_arg(&fn_path.into_token_stream(), &ident, pass_mode)
+            }
         },
     )
     .unwrap_or_else(|| Ok(quote!(0_usize)))
@@ -176,29 +178,41 @@ fn check_repr_packed(attrs: &[syn::Attribute]) -> bool {
 }
 
 fn get_field_config(attrs: &[syn::Attribute]) -> syn::Result<FieldConfig> {
+    // based on
+    // https://docs.rs/syn/latest/syn/macro.custom_keyword.html#example
+
+    mod kw {
+        syn::custom_keyword!(skip);
+        syn::custom_keyword!(with);
+    }
+
     enum Input {
         Skip {
-            skip: Ident,
+            _skip: kw::skip,
         },
         With {
-            with: Ident,
-            eq: syn::Token![=],
+            _with: kw::with,
+            _eq: syn::Token![=],
             path: syn::Path,
         },
     }
 
     impl syn::parse::Parse for Input {
         fn parse(input: syn::parse::ParseStream<'_>) -> syn::Result<Self> {
-            let ident = input.parse::<Ident>()?;
-
-            todo!()
-            // let lookahead = input.lookahead1();
-            // if lookahead.peek(Token![skip]) {
-            //     Ok(Self::Skip {
-            //         skip: input.parse(),
-            //     })
-            // } else if lookahead.peek(Token![with]) {
-            // }
+            let lookahead = input.lookahead1();
+            if lookahead.peek(kw::skip) {
+                Ok(Self::Skip {
+                    _skip: input.parse()?,
+                })
+            } else if lookahead.peek(kw::with) {
+                Ok(Self::With {
+                    _with: input.parse()?,
+                    _eq: input.parse()?,
+                    path: input.parse()?,
+                })
+            } else {
+                Err(lookahead.error())
+            }
         }
     }
 
