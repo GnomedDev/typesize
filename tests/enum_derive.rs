@@ -1,4 +1,4 @@
-use typesize::{TypeSize, TypeSize};
+use typesize::TypeSize;
 
 #[test]
 fn enum_derive() {
