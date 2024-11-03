@@ -249,6 +249,9 @@ struct GenerationRet {
 ///
 /// Use `#[typesize(skip)]` on a field to assume it does not manage any external memory.
 ///
+/// Use `#[typesize(with = path::to::fn)]` on a field to specify a custom `extra_size` for that field.
+/// The function accepts a reference to the type of the field.
+///
 /// This will avoid requiring `TypeSize` to be implemented for this field, however may lead to undercounted results if the assumption does not hold.
 ///
 /// # Struct Mode
