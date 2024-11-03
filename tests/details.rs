@@ -1,6 +1,6 @@
 #![cfg(feature = "details")]
 
-use typesize::{derive::TypeSize, Field, TypeSize};
+use typesize::{Field, TypeSize};
 
 #[test]
 fn test_details() {
