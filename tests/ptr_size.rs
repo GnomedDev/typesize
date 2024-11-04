@@ -1,12 +1,17 @@
-use typesize::{Ref, TypeSize};
+use typesize::{with::ref_size, TypeSize};
+
+struct NotTypesize;
 
 #[test]
 fn ptr_size() {
-    let fat_ptr: Ref<'_, [u8]> = Ref(&[]);
-    let thin_ptr: Ref<'_, u8> = Ref(&0);
-
-    assert_eq!(fat_ptr.get_size(), core::mem::size_of::<usize>() * 2);
-    assert_eq!(thin_ptr.get_size(), core::mem::size_of::<usize>());
+    assert_eq!(
+        ref_size::<[NotTypesize]>(&[NotTypesize].as_slice()),
+        core::mem::size_of::<usize>() * 2
+    );
+    assert_eq!(
+        ref_size::<NotTypesize>(&&NotTypesize),
+        core::mem::size_of::<usize>()
+    );
 }
 
 #[test]

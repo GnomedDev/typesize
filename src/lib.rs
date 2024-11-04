@@ -60,16 +60,13 @@ mod libs;
 #[cfg(any(feature = "std", feature = "mini_moka", feature = "hashbrown"))]
 mod map;
 mod primitives;
-pub mod ptr;
 mod set;
 #[cfg(feature = "std")]
 mod sync;
 mod time;
 mod tuple;
 mod vec;
-
-#[deprecated = "Use ptr::{Ref, RefMut}"]
-pub use ptr::{Ref, RefMut};
+pub mod with;
 
 pub use typesize_derive::TypeSize;
 
