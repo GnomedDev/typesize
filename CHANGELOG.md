@@ -1,5 +1,20 @@
 # `typesize` ChangeLog
 
+## 0.1.10
+
+### New library integrations
+
+- `TypeSize` is now implemented for `web_time::{Instant, SystemTime}` on `wasm32-unknown-unknown`.
+- `TypeSize` is now implemented for `bitvec::{BitVec, BitArray}`.
+
+### Added
+
+- `typesize::derive::TypeSize` now has proper documentation.
+- The derive now supports `#[typesize(skip)]` to skip the extra_size calculation for a given field.
+- The derive now supports `#[typesize(path = "...")]` to provide a function to calculate the size of a given field.
+- `TypeSize` is now implemented for `AtomicBool`, which was missed in the `0.1.8` updates.
+- `TypeSize` is now implemented for `std::sync::{Mutex, RwLock}`.
+
 ## 0.1.9
 
 ### Added
