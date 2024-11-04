@@ -12,32 +12,44 @@ fn field_details_visit_fields<'a>(
     transform_named: impl Fn(&'a Ident) -> TokenStream + 'a,
     transform_unnamed: impl Fn(usize) -> TokenStream + 'a,
     arg_pass_mode: PassMode,
-) -> TokenStream {
-    use crate::{for_each_field, gen_call_with_arg};
+) -> syn::Result<TokenStream> {
+    use crate::{for_each_field, gen_call_with_arg, FieldConfig};
 
     let exprs = for_each_field(
         fields,
         Punct::new(',', Spacing::Alone),
         transform_named,
         transform_unnamed,
-        move |ident, name, skip_field| {
+        move |ident, name, config| {
             let (size_expr, collection_items_expr);
-            if skip_field.0 {
-                size_expr = quote!(0);
-                collection_items_expr = quote!(None);
-            } else {
-                size_expr = gen_call_with_arg(
-                    &quote!(::typesize::TypeSize::get_size),
-                    &ident,
-                    arg_pass_mode,
-                );
+            match config {
+                FieldConfig::Skip => {
+                    size_expr = quote!(0);
+                    collection_items_expr = quote!(None);
+                }
+                FieldConfig::With(_) => {
+                    size_expr = gen_call_with_arg(
+                        &quote!(::typesize::TypeSize::get_size),
+                        &ident,
+                        arg_pass_mode,
+                    );
 
-                collection_items_expr = gen_call_with_arg(
-                    &quote!(::typesize::TypeSize::get_collection_item_count),
-                    &ident,
-                    arg_pass_mode,
-                );
-            };
+                    collection_items_expr = quote!(None);
+                }
+                FieldConfig::Default => {
+                    size_expr = gen_call_with_arg(
+                        &quote!(::typesize::TypeSize::get_size),
+                        &ident,
+                        arg_pass_mode,
+                    );
+
+                    collection_items_expr = gen_call_with_arg(
+                        &quote!(::typesize::TypeSize::get_collection_item_count),
+                        &ident,
+                        arg_pass_mode,
+                    );
+                }
+            }
 
             quote!(
                 ::typesize::Field {
@@ -48,12 +60,12 @@ fn field_details_visit_fields<'a>(
             )
         },
     )
-    .unwrap_or_default();
+    .unwrap_or_else(|| Ok(TokenStream::default()))?;
 
-    quote!(vec![#exprs])
+    Ok(quote!(vec![#exprs]))
 }
 
-pub(crate) fn gen_struct(fields: &syn::Fields, is_packed: bool) -> GenerationRet {
+pub(crate) fn gen_struct(fields: &syn::Fields, is_packed: bool) -> syn::Result<GenerationRet> {
     let transform_named = |ident| quote!(self.#ident);
     let transform_unnamed = |index| {
         let ident = syn::Index::from(index);
@@ -66,19 +78,19 @@ pub(crate) fn gen_struct(fields: &syn::Fields, is_packed: bool) -> GenerationRet
         PassMode::InsertRef
     };
 
-    GenerationRet {
+    Ok(GenerationRet {
         extra_size: extra_details_visit_fields(
             fields,
             transform_named,
             transform_unnamed,
             pass_mode,
-        ),
+        )?,
         #[cfg(feature = "details")]
         details: Some(field_details_visit_fields(
             fields,
             transform_named,
             transform_unnamed,
             pass_mode,
-        )),
-    }
+        )?),
+    })
 }
