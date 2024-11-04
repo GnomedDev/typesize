@@ -71,9 +71,7 @@ mod vec;
 #[deprecated = "Use ptr::{Ref, RefMut}"]
 pub use ptr::{Ref, RefMut};
 
-pub mod derive {
-    pub use typesize_derive::TypeSize;
-}
+pub use typesize_derive::TypeSize;
 
 /// A trait to fetch an accurate estimate of the total memory usage of a value.
 ///

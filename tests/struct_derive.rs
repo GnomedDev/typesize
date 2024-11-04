@@ -1,4 +1,4 @@
-use typesize::{derive::TypeSize, TypeSize};
+use typesize::TypeSize;
 
 #[derive(Default)]
 #[allow(dead_code)]
