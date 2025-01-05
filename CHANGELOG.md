@@ -1,5 +1,11 @@
 # `typesize` ChangeLog
 
+## 0.1.11
+
+### Added
+
+- `typesize::derive::Typesize` now correctly handles `repr(Rust, packed)`, `repr(C, packed)`, and reversed variants.
+
 ## 0.1.10
 
 ### New library integrations
