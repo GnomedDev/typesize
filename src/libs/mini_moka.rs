@@ -22,8 +22,8 @@ impl<K: TypeSize + Hash + Eq + PartialEq, V: TypeSize, S: BuildHasher + Clone> T
 }
 
 #[cfg(feature = "dashmap")]
-impl<'a, K: Eq + Hash, V, S: BuildHasher + Clone> crate::map::EntryRef<K, V>
-    for mini_moka::sync::EntryRef<'a, K, V, S>
+impl<K: Eq + Hash, V, S: BuildHasher + Clone> crate::map::EntryRef<K, V>
+    for mini_moka::sync::EntryRef<'_, K, V, S>
 {
     fn get_ref(&self) -> (&K, &V) {
         self.pair()
