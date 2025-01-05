@@ -95,17 +95,21 @@ fn struct_padding() {
     #[derive(Default, TypeSize)]
     struct PackedTest(u8, u64);
 
-    #[repr(Rust, packed)]
-    #[derive(Default, TypeSize)]
-    struct RustPackedTest(u8, u64);
+    // MSRV: Requires 1.74
+    //
+    // #[repr(Rust, packed)]
+    // #[derive(Default, TypeSize)]
+    // struct RustPackedTest(u8, u64);
 
     #[repr(C, packed)]
     #[derive(Default, TypeSize)]
     struct CPackedTest(u8, u64);
 
-    #[repr(packed, Rust)]
-    #[derive(Default, TypeSize)]
-    struct PackedRustTest(u8, u64);
+    // MSRV: Requires 1.74
+    //
+    // #[repr(packed, Rust)]
+    // #[derive(Default, TypeSize)]
+    // struct PackedRustTest(u8, u64);
 
     #[repr(packed, C)]
     #[derive(Default, TypeSize)]
@@ -118,9 +122,9 @@ fn struct_padding() {
 
     test_packed!(
         PackedTest,
-        RustPackedTest,
+        // RustPackedTest,
         CPackedTest,
-        PackedRustTest,
+        // PackedRustTest,
         PackedCTest
     )
 }
