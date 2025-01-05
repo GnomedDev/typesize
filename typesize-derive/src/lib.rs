@@ -151,7 +151,37 @@ fn extra_details_visit_fields<'a>(
     .unwrap_or_else(|| Ok(quote!(0_usize)))
 }
 
-fn check_metalist_attr(attrs: &[syn::Attribute], expected_ident: &str, inner_ident: &str) -> bool {
+fn check_repr_packed(attrs: &[syn::Attribute]) -> bool {
+    fn is_valid_repr_for_packed(ident: &syn::Ident) -> bool {
+        // "packed may only be applied to the Rust and C representations."
+        // https://doc.rust-lang.org/reference/type-layout.html#the-alignment-modifiers
+        ident == "C" || ident == "Rust"
+    }
+
+    struct CheckIsPacked(bool);
+    impl syn::parse::Parse for CheckIsPacked {
+        fn parse(input: syn::parse::ParseStream<'_>) -> syn::Result<Self> {
+            let first_token = input.parse::<syn::Ident>()?;
+            if !input.peek(syn::Token![,]) {
+                let is_packed = first_token == "packed";
+                return Ok(Self(is_packed));
+            }
+
+            input.parse::<syn::Token![,]>()?;
+
+            let second_token = input.parse::<syn::Ident>()?;
+            if is_valid_repr_for_packed(&first_token) && second_token == "packed" {
+                return Ok(Self(true));
+            }
+
+            if first_token == "packed" && is_valid_repr_for_packed(&second_token) {
+                return Ok(Self(true));
+            }
+
+            Ok(Self(false))
+        }
+    }
+
     attrs.iter().any(|attr| {
         let syn::Meta::List(meta) = &attr.meta else {
             return false;
@@ -161,20 +191,12 @@ fn check_metalist_attr(attrs: &[syn::Attribute], expected_ident: &str, inner_ide
             return false;
         };
 
-        if ident != expected_ident {
+        if ident != "repr" {
             return false;
         }
 
-        let Ok(ident) = syn::parse::<syn::Ident>(meta.tokens.clone().into()) else {
-            return false;
-        };
-
-        ident == inner_ident
+        syn::parse2::<CheckIsPacked>(meta.tokens.clone()).unwrap().0
     })
-}
-
-fn check_repr_packed(attrs: &[syn::Attribute]) -> bool {
-    check_metalist_attr(attrs, "repr", "packed")
 }
 
 fn get_field_config(attrs: &[syn::Attribute]) -> syn::Result<FieldConfig> {

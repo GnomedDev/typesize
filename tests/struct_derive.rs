@@ -79,6 +79,15 @@ fn struct_unit() {
 
 #[test]
 fn struct_padding() {
+    macro_rules! test_packed {
+        ($($ty_name:ty),*) => {{$(
+            assert_eq!(
+                <$ty_name>::default().get_size(),
+                0_u64.get_size() + 0_u8.get_size()
+            );
+        )*}};
+    }
+
     #[derive(Default, TypeSize)]
     struct PaddingTest(u8, u64);
 
@@ -86,15 +95,34 @@ fn struct_padding() {
     #[derive(Default, TypeSize)]
     struct PackedTest(u8, u64);
 
+    #[repr(Rust, packed)]
+    #[derive(Default, TypeSize)]
+    struct RustPackedTest(u8, u64);
+
+    #[repr(C, packed)]
+    #[derive(Default, TypeSize)]
+    struct CPackedTest(u8, u64);
+
+    #[repr(packed, Rust)]
+    #[derive(Default, TypeSize)]
+    struct PackedRustTest(u8, u64);
+
+    #[repr(packed, C)]
+    #[derive(Default, TypeSize)]
+    struct PackedCTest(u8, u64);
+
     assert_eq!(
         PaddingTest::default().get_size(),
         core::mem::size_of::<PaddingTest>()
     );
 
-    assert_eq!(
-        PackedTest::default().get_size(),
-        0_u64.get_size() + 0_u8.get_size()
-    );
+    test_packed!(
+        PackedTest,
+        RustPackedTest,
+        CPackedTest,
+        PackedRustTest,
+        PackedCTest
+    )
 }
 
 #[test]
