@@ -1,5 +1,11 @@
 # `typesize` ChangeLog
 
+## 0.1.12
+
+### New library integrations
+
+- `TypeSize` is now implemented for `hashbrown::HashMap` and `hashbrown::HashSet` for `hashbrown 0.15.x`.
+
 ## 0.1.11
 
 ### Added
