@@ -1,5 +1,11 @@
 # `typesize` ChangeLog
 
+## 0.1.13
+
+### New library integrations
+
+- `TypeSize` is now implemented for `hashbrown::HashTable` for both `hashbrown` versions.
+
 ## 0.1.12
 
 ### New library integrations
