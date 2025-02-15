@@ -1,5 +1,5 @@
 use core::hash::{BuildHasher, Hash};
-use hashbrown_15::{HashMap, HashSet};
+use hashbrown_15::{HashMap, HashSet, HashTable};
 
 use crate::TypeSize;
 
@@ -21,6 +21,17 @@ impl<K: Eq + Hash + TypeSize, V: TypeSize, S: BuildHasher> TypeSize for HashMap<
 }
 
 impl<T: Eq + Hash + TypeSize, S: BuildHasher> TypeSize for HashSet<T, S> {
+    fn extra_size(&self) -> usize {
+        self.allocation_size() + self.iter().map(T::extra_size).sum::<usize>()
+    }
+
+    #[cfg(feature = "details")]
+    fn get_collection_item_count(&self) -> Option<usize> {
+        Some(self.len())
+    }
+}
+
+impl<T: TypeSize> TypeSize for HashTable<T> {
     fn extra_size(&self) -> usize {
         self.allocation_size() + self.iter().map(T::extra_size).sum::<usize>()
     }
