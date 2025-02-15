@@ -14,7 +14,8 @@ members = ["typesize-derive"]
 
 [dependencies]
 parking_lot = { version = "0.12.1", default-features = false, optional = true }
-hashbrown = { version = "0.14.2", default-features = false, optional = true }
+hashbrown_14 = { version = "0.14.2", default-features = false, optional = true, package = "hashbrown" }
+hashbrown_15 = { version = "0.15.2", default-features = false, optional = true, package = "hashbrown" }
 mini-moka = { version = "0.10.2", default-features = false, optional = true }
 halfbrown = { version = "0.2.4", default-features = false, optional = true }
 simd-json = { version = "0.13", default-features = false, optional = true }
@@ -47,7 +48,8 @@ extract_map_01 = ["dep:extract_map"]
 parking_lot = ["dep:parking_lot"]
 serde_json = ["dep:serde_json"]
 mini_moka = ["dep:mini-moka"]
-hashbrown = ["dep:hashbrown"]
+hashbrown = ["dep:hashbrown_14"]
+hashbrown_15 = ["dep:hashbrown_15"]
 secrecy = ["dep:secrecy"]
 chrono = ["dep:chrono"]
 nonmax = ["dep:nonmax"]

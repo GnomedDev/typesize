@@ -30,7 +30,8 @@
 //! - `parking_lot`: Implements [`TypeSize`] for [`parking_lot::Mutex`] and [`parking_lot::RwLock`].
 //! - `serde_json`: Implements [`TypeSize`] for [`serde_json::Value`] and [`serde_json::Map`].
 //! - `mini_moka`: Implements [`TypeSize`] for [`mini_moka::unsync::Cache`], and [`mini_moka::sync::Cache`] if `dashmap` is enabled.
-//! - `hashbrown`: Implements [`TypeSize`] for [`hashbrown::HashMap`].
+//! - `hashbrown`: Implements [`TypeSize`] for [`hashbrown_14::HashMap`] (version 0.14.x).
+//! - `hashbrown_15`: Implements [`TypeSize`] for [`hashbrown_15::HashMap`] (version 0.15.x).
 //! - `secrecy`: Implements [`TypeSize`] for [`Secret`].
 //! - `chrono`: Implements [`TypeSize`] for [`chrono::DateTime`] of any [`chrono::TimeZone`].
 //! - `nonmax`: Implements [`TypeSize`] for all [`nonmax`] types.

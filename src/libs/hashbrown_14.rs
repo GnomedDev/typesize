@@ -1,4 +1,4 @@
-use hashbrown::{HashMap, HashSet};
+use hashbrown_14::{HashMap, HashSet};
 
 use crate::{map::generic_map_extra_size, vec::generic_vec_extra_size, TypeSize};
 

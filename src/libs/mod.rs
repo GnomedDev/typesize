@@ -11,7 +11,9 @@ mod extract_map;
 #[cfg(feature = "halfbrown")]
 mod halfbrown;
 #[cfg(feature = "hashbrown")]
-mod hashbrown;
+mod hashbrown_14;
+#[cfg(feature = "hashbrown_15")]
+mod hashbrown_15;
 #[cfg(feature = "mini_moka")]
 mod mini_moka;
 #[cfg(feature = "nonmax")]
