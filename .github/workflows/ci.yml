@@ -37,17 +37,50 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      - name: Install generic target with no std
+        run: rustup target add x86_64-unknown-none
+
+      - name: Install generic target with no std/atomics
+        run: rustup target add thumbv6m-none-eabi
+
       - name: Install `wasm32-unknown-unknown` target
         run: rustup target add wasm32-unknown-unknown
+
+      # no-std
+
+      - name: Run Cargo clippy with no std, no details, no libs
+        run: cargo clippy --target x86_64-unknown-none --no-default-features -- --deny warnings
+
+      - name: Run Cargo clippy with no std, details, no libs
+        run: cargo clippy --target x86_64-unknown-none --no-default-features --features details -- --deny warnings
+
+      - name: Run Cargo clippy with no std, no details, no-std-compatible libs
+        run: cargo clippy --target x86_64-unknown-none --no-default-features --features arrayvec,hashbrown,hashbrown_15,secrecy,chrono,nonmax,time,url,bitvec -- --deny warnings
+
+      - name: Run Cargo clippy with no std, details, no-std-compatible libs
+        run: cargo clippy --target x86_64-unknown-none --no-default-features --features details,arrayvec,hashbrown,hashbrown_15,secrecy,chrono,nonmax,time,url,bitvec -- --deny warnings
+
+      # no-std/atomics
+
+      - name: Run Cargo clippy with no std/atomics, no details, no libs
+        run: cargo clippy --target thumbv6m-none-eabi --no-default-features -- --deny warnings
+
+      - name: Run Cargo clippy with no std/atomics, details, no libs
+        run: cargo clippy --target thumbv6m-none-eabi --no-default-features --features details -- --deny warnings
+
+      - name: Run Cargo clippy with no std/atomics, no details, no-std/atomics-compatible libs
+        run: cargo clippy --target thumbv6m-none-eabi --no-default-features --features arrayvec,hashbrown,hashbrown_15,secrecy,chrono,nonmax,time,bitvec -- --deny warnings
+
+      - name: Run Cargo clippy with no std/atomics, details, no-std/atomics-compatible libs
+        run: cargo clippy --target thumbv6m-none-eabi --no-default-features --features details,arrayvec,hashbrown,hashbrown_15,secrecy,chrono,nonmax,time,bitvec -- --deny warnings
+
+      # std
 
       - name: Run Cargo clippy with no details, no libs
         run: cargo clippy -- --deny warnings
 
       - name: Run Cargo clippy with details, no libs
         run: cargo clippy --features details -- --deny warnings
-
-      - name: Run Cargo clippy with details, no std, no libs
-        run: cargo clippy --features details --no-default-features -- --deny warnings
 
       - name: Run Cargo clippy with no details, all libs
         run: cargo clippy --features dashmap,arrayvec,simd_json,halfbrown,parking_lot,serde_json,mini_moka,hashbrown,hashbrown_15,secrecy,chrono,nonmax,time,url,extract_map_01,bitvec,web-time -- --deny warnings

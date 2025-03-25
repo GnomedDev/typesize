@@ -4,9 +4,11 @@ use core::ops::{Deref, DerefMut};
 
 use crate::TypeSize;
 
+#[cfg(target_has_atomic = "ptr")]
 pub use arc::SizableArc;
 pub use rc::SizableRc;
 
+#[cfg(target_has_atomic = "ptr")]
 mod arc;
 mod rc;
 
