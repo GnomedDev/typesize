@@ -98,7 +98,7 @@ fn gen_unnamed_exprs<'a>(
 ) -> Option<impl ExactSizeIterator<Item = syn::Result<TokenStream>> + 'a> {
     if unnamed_fields.len() == 0 {
         return None;
-    };
+    }
 
     let enumerated_iter = unnamed_fields.enumerate();
     Some(enumerated_iter.map(move |(i, field)| {
