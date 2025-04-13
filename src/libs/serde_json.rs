@@ -28,3 +28,9 @@ impl TypeSize for serde_json::Value {
         }
     }
 }
+
+impl TypeSize for Box<serde_json::value::RawValue> {
+    fn extra_size(&self) -> usize {
+        core::mem::size_of::<u8>() * self.get().len()
+    }
+}
