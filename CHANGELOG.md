@@ -1,5 +1,15 @@
 # `typesize` ChangeLog
 
+## 0.1.14
+
+### New library integrations
+
+- `TypeSize` is now implemented for `Box<serde_json::value::RawValue>`.
+
+### Added
+
+- `TypeSize` now supports `no_std` with more library integrations, and does not assume the existance of atomics.
+
 ## 0.1.13
 
 ### New library integrations
