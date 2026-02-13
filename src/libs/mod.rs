@@ -14,6 +14,8 @@ mod halfbrown;
 mod hashbrown_14;
 #[cfg(feature = "hashbrown_15")]
 mod hashbrown_15;
+#[cfg(feature = "jiff")]
+mod jiff;
 #[cfg(feature = "mini_moka")]
 mod mini_moka;
 #[cfg(feature = "nonmax")]
