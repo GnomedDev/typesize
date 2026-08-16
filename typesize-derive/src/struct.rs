@@ -27,12 +27,11 @@ fn field_details_visit_fields<'a>(
                     size_expr = quote!(0);
                     collection_items_expr = quote!(None);
                 }
-                FieldConfig::With(_) => {
-                    size_expr = gen_call_with_arg(
-                        &quote!(::typesize::TypeSize::get_size),
-                        &ident,
-                        arg_pass_mode,
-                    );
+                FieldConfig::With(get_size) => {
+                    use quote::ToTokens;
+
+                    size_expr =
+                        gen_call_with_arg(&get_size.into_token_stream(), &ident, arg_pass_mode);
 
                     collection_items_expr = quote!(None);
                 }
