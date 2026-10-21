@@ -65,7 +65,7 @@ url = ["dep:url"]
 bitvec = ["dep:bitvec"]
 web-time = ["dep:web-time"]
 jiff = ["dep:jiff"]
-smolstr = ["dep:smol_str"]
+smol_str = ["dep:smol_str"]
 
 [package.metadata.docs.rs]
 all-features = true
