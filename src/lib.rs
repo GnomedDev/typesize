@@ -38,6 +38,7 @@
 //! - `time`: Implements [`TypeSize`] for [`time::OffsetDateTime`].
 //! - `url`: Implements [`TypeSize`] for [`url::Url`].
 //! - `bitvec`: Implements [`TypeSize`] for [`bitvec::array::BitArray`] and [`bitvec::vec::BitVec`].
+//! - `bytes`: Implements [`TypeSize`] for [`bytes::Bytes`] and [`bytes::BytesMut`].
 //! - `web-time`: Implements [`TypeSize`] for [`web_time::Instant`] and [`web_time::SystemTime`] (on platforms where these aren't type aliases to [`std::time`] types).
 //!
 //! [`HashMap`]: std::collections::HashMap
@@ -57,7 +58,7 @@ mod r#box;
 mod cell;
 mod enums;
 mod hash;
-mod libs;
+pub mod libs;
 #[cfg(any(feature = "std", feature = "mini_moka", feature = "hashbrown"))]
 mod map;
 mod primitives;

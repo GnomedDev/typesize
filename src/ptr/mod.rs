@@ -62,7 +62,7 @@ impl<T: ?Sized> DerefMut for RefMut<'_, T> {
 create_ref!(pub struct Ptr<T: ?Sized>(pub *const T));
 create_ref!(pub struct PtrMut<T: ?Sized>(pub *mut T));
 
-mod sealed {
+pub(crate) mod sealed {
     pub trait ShouldCountInner {}
 
     impl ShouldCountInner for super::Borrowed {}
