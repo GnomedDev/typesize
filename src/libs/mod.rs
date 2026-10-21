@@ -28,7 +28,7 @@ mod secrecy;
 mod serde_json;
 #[cfg(feature = "simd_json")]
 mod simd_json;
-#[cfg(feature = "smolstr")]
+#[cfg(feature = "smol_str")]
 mod smolstr;
 #[cfg(feature = "time")]
 mod time;
