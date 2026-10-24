@@ -1,5 +1,11 @@
 # `typesize` ChangeLog
 
+## 0.1.16
+
+### New library integrations
+
+- `TypeSize` is now implemented for parking_lot 0.13, under the `parking_lot_13` feature.
+
 ## 0.1.15
 
 ### New library integrations
