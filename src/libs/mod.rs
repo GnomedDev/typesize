@@ -20,7 +20,7 @@ mod jiff;
 mod mini_moka;
 #[cfg(feature = "nonmax")]
 mod nonmax;
-#[cfg(feature = "parking_lot")]
+#[cfg(any(feature = "parking_lot", feature = "parking_lot_13"))]
 mod parking_lot;
 #[cfg(feature = "secrecy")]
 mod secrecy;
