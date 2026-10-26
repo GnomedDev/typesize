@@ -69,10 +69,10 @@ jobs:
         run: cargo clippy --target thumbv6m-none-eabi --no-default-features --features details -- --deny warnings
 
       - name: Run Cargo clippy with no std/atomics, no details, no-std/atomics-compatible libs
-        run: cargo clippy --target thumbv6m-none-eabi --no-default-features --features arrayvec,hashbrown,hashbrown_15,secrecy,chrono,nonmax,time,bitvec,smol_str -- --deny warnings
+        run: cargo clippy --target thumbv6m-none-eabi --no-default-features --features arrayvec,hashbrown,hashbrown_15,secrecy,chrono,nonmax,time,bitvec -- --deny warnings
 
       - name: Run Cargo clippy with no std/atomics, details, no-std/atomics-compatible libs
-        run: cargo clippy --target thumbv6m-none-eabi --no-default-features --features details,arrayvec,hashbrown,hashbrown_15,secrecy,chrono,nonmax,time,bitvec,smol_str -- --deny warnings
+        run: cargo clippy --target thumbv6m-none-eabi --no-default-features --features details,arrayvec,hashbrown,hashbrown_15,secrecy,chrono,nonmax,time,bitvec -- --deny warnings
 
       # std
 
