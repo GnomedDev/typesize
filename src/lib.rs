@@ -39,6 +39,7 @@
 //! - `url`: Implements [`TypeSize`] for [`url::Url`].
 //! - `bitvec`: Implements [`TypeSize`] for [`bitvec::array::BitArray`] and [`bitvec::vec::BitVec`].
 //! - `web-time`: Implements [`TypeSize`] for [`web_time::Instant`] and [`web_time::SystemTime`] (on platforms where these aren't type aliases to [`std::time`] types).
+//! - `smol_str`: Implements [`TypeSize`] for [`smol_str::SmolStr`]
 //!
 //! [`HashMap`]: std::collections::HashMap
 //! [`HashSet`]: std::collections::HashSet
