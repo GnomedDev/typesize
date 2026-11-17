@@ -1,8 +1,8 @@
 //! [TypeSize] support for [jiff].
 //!
-//! This covers all [jiff] types which represent dates and/or times, such as [jiff:civil::Date] or [jiff::Zoned].
-//! It does not cover utility types used for formatting/rounding/etc, such as [jiff::SignedDurationRound]
-//! or [jiff::ZonedArithmetic].
+//! This covers all [jiff] types which represent dates and/or times, such as [jiff:civil::Date] or
+//! [jiff::ZonedDateTime]. It does not cover utility types used for formatting/rounding/etc, such
+//! as [jiff::SignedDurationRound] or [jiff::ZonedDateTimeArithmetic].
 use crate::TypeSize;
 
 // SignedDuration is a struct containing two ints
@@ -29,7 +29,7 @@ impl TypeSize for jiff::Span {}
 impl TypeSize for jiff::tz::Offset {}
 
 // TimeZone internally contains a pointer which may or may not point to owned data.
-// https://github.com/BurntSushi/jiff/blob/0.2.24/src/tz/timezone.rs#L2032-L2054
+// https://github.com/BurntSushi/jiff/blob/1.0.0/crates/jiff/src/tz/timezone.rs#L2352-L2374
 // But it supports a memory_usage method which returns what get_extra_size should return.
 impl TypeSize for jiff::tz::TimeZone {
     fn extra_size(&self) -> usize {
@@ -39,7 +39,7 @@ impl TypeSize for jiff::tz::TimeZone {
 
 // Zoned contains a Timestamp, DateTime, Offset, and TimeZone. Therefore it also provides
 // a memory_usage method.
-impl TypeSize for jiff::Zoned {
+impl TypeSize for jiff::ZonedDateTime {
     fn extra_size(&self) -> usize {
         self.memory_usage()
     }
