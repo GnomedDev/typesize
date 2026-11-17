@@ -39,6 +39,7 @@
 //! - `url`: Implements [`TypeSize`] for [`url::Url`].
 //! - `bitvec`: Implements [`TypeSize`] for [`bitvec::array::BitArray`] and [`bitvec::vec::BitVec`].
 //! - `web-time`: Implements [`TypeSize`] for [`web_time::Instant`] and [`web_time::SystemTime`] (on platforms where these aren't type aliases to [`std::time`] types).
+//! - `jiff`: Implements [`TypeSize`] for [`jiff::SignedDuration`], [`jiff::Timestamp`], [`jiff::Span`], [`jiff::ZonedDateTime`], [`jiff::civil::Date`], [`jiff::civil::Time`], [`jiff::civil::DateTime`], [`jiff::tz::Offset`], and [`jiff::tz::TimeZone`].
 //! - `smol_str`: Implements [`TypeSize`] for [`smol_str::SmolStr`]
 //!
 //! [`HashMap`]: std::collections::HashMap
