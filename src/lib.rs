@@ -39,7 +39,9 @@
 //! - `url`: Implements [`TypeSize`] for [`url::Url`].
 //! - `bitvec`: Implements [`TypeSize`] for [`bitvec::array::BitArray`] and [`bitvec::vec::BitVec`].
 //! - `web-time`: Implements [`TypeSize`] for [`web_time::Instant`] and [`web_time::SystemTime`] (on platforms where these aren't type aliases to [`std::time`] types).
-//! - `smol_str`: Implements [`TypeSize`] for [`smol_str::SmolStr`]
+//! - `jiff`: Implements [`TypeSize`] for [`jiff::SignedDuration`], [`jiff::Timestamp`], [`jiff::Span`], [`jiff::ZonedDateTime`], [`jiff::civil::Date`], [`jiff::civil::Time`], [`jiff::civil::DateTime`], [`jiff::tz::Offset`], and [`jiff::tz::TimeZone`] (version 0.2.x).
+//! - `jiff_1`: Implements the equivalent types for version 1.0.x (i.e., [`jiff::ZonedDateTime`] instead of [`jiff::Zoned`]).
+//! - `smol_str`: Implements [`TypeSize`] for [`smol_str::SmolStr`].
 //!
 //! [`HashMap`]: std::collections::HashMap
 //! [`HashSet`]: std::collections::HashSet
@@ -50,6 +52,16 @@
 //! [`SizedHashMap`]: halfbrown::SizedHashMap
 //! [`DashMap`]: dashmap::DashMap
 //! [`Secret`]: secrecy::Secret
+//! [`jiff::SignedDuration`]: jiff_0::SignedDuration
+//! [`jiff::Timestamp`]: jiff_0::Timestamp
+//! [`jiff::Span`]: jiff_0::Span
+//! [`jiff::Zoned`]: jiff_0::Zoned
+//! [`jiff::civil::Date`]: jiff_0::civil::Date
+//! [`jiff::civil::Time`]: jiff_0::civil::Time
+//! [`jiff::civil::DateTime`]: jiff_0::civil::DateTime
+//! [`jiff::tz::Offset`]: jiff_0::tz::Offset
+//! [`jiff::tz::TimeZone`]: jiff_0::tz::TimeZone
+//! [`jiff::ZonedDateTime`]: jiff_1::ZonedDateTime
 #![cfg_attr(not(feature = "std"), no_std)]
 #![cfg_attr(feature = "saturating_impls", expect(clippy::incompatible_msrv))]
 extern crate alloc;
