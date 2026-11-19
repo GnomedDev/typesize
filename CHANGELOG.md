@@ -1,5 +1,12 @@
 # `typesize` ChangeLog
 
+## 0.1.17
+
+### New library integrations
+
+- `TypeSize` is now implemented for jiff 1.x, under the `jiff_1` feature.
+- `TypeSize` is now implemented for `smol_str`, under the `smol_str` feature.
+
 ## 0.1.16
 
 ### New library integrations
